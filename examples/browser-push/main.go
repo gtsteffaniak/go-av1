@@ -24,7 +24,7 @@ import (
 	"github.com/pion/webrtc/v4"
 	"github.com/pion/webrtc/v4/pkg/media"
 
-	goav1 "github.com/thesyncim/goav1"
+	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 //go:embed index.html

@@ -8,12 +8,12 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/loopfilter"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/threading"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // Frame-threaded superblock-row post-filter pipeline (dav1d's per-sbrow

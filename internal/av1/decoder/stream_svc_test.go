@@ -3,8 +3,8 @@ package decoder
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
-	"github.com/thesyncim/goav1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 // appendLowOverheadOBUExt is the extension-header counterpart of

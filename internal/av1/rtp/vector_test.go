@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/testvector"
+	"github.com/gtsteffaniak/go-av1/internal/av1/testvector"
 )
 
 func TestRTPCoreVectors(t *testing.T) {

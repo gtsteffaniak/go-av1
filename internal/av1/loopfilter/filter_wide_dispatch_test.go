@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 )
 
 // wideFilterParamsCorpus mirrors filter4DispatchParamsCorpus but for the wide

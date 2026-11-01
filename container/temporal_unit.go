@@ -4,8 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	internalencoder "github.com/thesyncim/goav1/internal/av1/encoder"
-	internalobu "github.com/thesyncim/goav1/internal/av1/obu"
+	internalobu "github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 // Av1C holds a parsed AV1CodecConfigurationBox (av1C) payload. ConfigOBUs
@@ -79,41 +78,32 @@ func BuildTemporalUnit(configOBUs []byte, sample []byte) ([]byte, error) {
 	if len(configUnits) == 0 && len(sampleUnits) == 0 {
 		return nil, errors.New("container: no OBUs in config or sample")
 	}
-	enc := make([]internalencoder.OBU, 0, len(configUnits)+len(sampleUnits))
+	enc := make([]internalobu.Unit, 0, len(configUnits)+len(sampleUnits))
 	for _, u := range configUnits {
 		if u.Header.Type == internalobu.TypeTemporalDelimiter {
 			continue
 		}
-		enc = append(enc, encoderOBU(u))
+		enc = append(enc, u)
 	}
 	for _, u := range sampleUnits {
 		if u.Header.Type == internalobu.TypeTemporalDelimiter {
 			continue
 		}
-		enc = append(enc, encoderOBU(u))
+		enc = append(enc, u)
 	}
 	if len(enc) == 0 {
 		return nil, errors.New("container: no frame OBUs after merge")
 	}
-	size, err := internalencoder.LowOverheadTemporalUnitSize(enc)
+	size, err := internalobu.LowOverheadTemporalUnitSize(enc)
 	if err != nil {
 		return nil, err
 	}
 	out := make([]byte, 0, size)
-	out, err = internalencoder.AppendLowOverheadTemporalUnit(out, enc)
+	out, err = internalobu.AppendLowOverheadTemporalUnit(out, enc)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
-}
-
-func encoderOBU(u internalobu.Unit) internalencoder.OBU {
-	return internalencoder.OBU{
-		Type:       u.Header.Type,
-		TemporalID: u.Header.TemporalID,
-		SpatialID:  u.Header.SpatialID,
-		Payload:    u.Payload,
-	}
 }
 
 func splitLowOverheadOBUs(src []byte) ([]internalobu.Unit, error) {

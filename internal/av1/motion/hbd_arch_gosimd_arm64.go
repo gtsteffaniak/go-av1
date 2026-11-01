@@ -9,7 +9,7 @@ package motion
 import (
 	"simd/archsimd"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 )
 
 // hbdSIMDAvailable reports whether the Go SIMD high-bit-depth kernels may run.

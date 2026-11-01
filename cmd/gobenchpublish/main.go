@@ -23,8 +23,8 @@ import (
 	"strings"
 	"time"
 
-	cpufeatures "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
-	"github.com/thesyncim/goav1/internal/benchenv"
+	cpufeatures "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/benchenv"
 )
 
 var observeBenchmarkCPUState = benchenv.ObserveCPUState

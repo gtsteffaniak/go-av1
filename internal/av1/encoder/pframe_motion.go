@@ -3,9 +3,9 @@ package encoder
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // pframe_motion.go is the inter block's motion stage shared by the fused

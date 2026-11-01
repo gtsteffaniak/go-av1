@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 // pipelineTestFrame builds a deterministic moving-box frame like the L1T2 gate.

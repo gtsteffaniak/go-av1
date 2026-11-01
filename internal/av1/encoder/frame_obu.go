@@ -1,8 +1,8 @@
 package encoder
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
-	"github.com/thesyncim/goav1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 // frame_obu.go packs a frame as one OBU_FRAME (frame_obu: frame_header_obu,

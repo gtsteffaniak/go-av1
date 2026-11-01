@@ -5,10 +5,10 @@ import (
 	"crypto/md5"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/ivf"
-	"github.com/thesyncim/goav1/internal/av1/obu"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/rtp"
+	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/rtp"
 )
 
 func TestCoreSuiteVectors(t *testing.T) {

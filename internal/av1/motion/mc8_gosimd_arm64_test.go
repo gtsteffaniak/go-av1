@@ -13,7 +13,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // mc8TestRef builds a reference plane filled per pattern: 0 random, 1 all

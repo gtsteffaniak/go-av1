@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 type warpHBDResidentKernel func(tmp *warpTmp, ref frame.Plane, ix4 int, sx4 int, iy4 int, sy4 int, alpha int, beta int, reduceBitsHoriz int, offsetBitsHoriz int) int

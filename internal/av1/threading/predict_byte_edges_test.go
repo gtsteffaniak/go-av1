@@ -5,9 +5,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/prediction"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/prediction"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 func TestFreshByteDirectionalEdgesIgnorePoisonOutsideConsumedSpans(t *testing.T) {

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/filmgrain"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/filmgrain"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 func TestFrameWorkPostFilterContextFilmGrainPostFilterPlanSkipsInactive(t *testing.T) {

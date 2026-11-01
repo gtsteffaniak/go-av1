@@ -6,7 +6,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // Targets without a Go SIMD warp kernel keep the pure-Go references. These are the
 // static counterparts of warp_dispatch_arm64.go, so warp.go's call sites resolve

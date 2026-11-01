@@ -3,8 +3,8 @@ package encoder
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/obu"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // MonochromeVideoEncoder encodes a same-sized native AV1 monochrome stream.

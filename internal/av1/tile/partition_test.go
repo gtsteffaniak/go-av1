@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 )
 
 func TestPartitionCDFsInitDefaultMatchesDav1d(t *testing.T) {

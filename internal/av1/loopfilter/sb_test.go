@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // sbTestPlane fills a plane with smooth content plus noise so every filter

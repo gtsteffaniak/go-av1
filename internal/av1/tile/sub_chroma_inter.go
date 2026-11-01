@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/motion"
+import "github.com/gtsteffaniak/go-av1/internal/av1/motion"
 
 // SubChromaInterCell is one chroma sub-block's MV plus its position within
 // the chroma block, expressed in chroma samples relative to the chroma

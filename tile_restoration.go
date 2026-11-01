@@ -1,6 +1,6 @@
 package goav1
 
-import internaltile "github.com/thesyncim/goav1/internal/av1/tile"
+import internaltile "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // BuildTileRestorationPlaneGrid returns the per-plane restoration grid (unit
 // count, unit size, offsets) for the given (params, size, color, plane).

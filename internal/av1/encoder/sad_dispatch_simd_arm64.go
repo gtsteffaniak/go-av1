@@ -11,7 +11,7 @@ package encoder
 // motion-search hot path (pframe_residual.go) calls, so they call the
 // Go-native-SIMD kernels directly rather than through the dispatch variables.
 
-import "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+import "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 
 // sadSIMDBound reports whether init binds the dispatch variables to the
 // Go-native-SIMD kernels. Without NEON the portable scalar defaults from sad.go

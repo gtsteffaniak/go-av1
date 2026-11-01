@@ -3,11 +3,11 @@ package encoder
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/prediction"
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/prediction"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // pframe_intra_sc.go is the intra candidate set SVT-AV1 injects in inter

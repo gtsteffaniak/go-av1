@@ -2,7 +2,7 @@
 
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/motion"
+import "github.com/gtsteffaniak/go-av1/internal/av1/motion"
 
 // refmvsPoisonEnabled and refmvsOracleEnabled are compiled out of production
 // builds; the goav1_refmvs_oracle tag turns on poisoned row storage and the

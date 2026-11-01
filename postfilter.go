@@ -1,8 +1,8 @@
 package goav1
 
 import (
-	internalcdef "github.com/thesyncim/goav1/internal/av1/cdef"
-	internalrestoration "github.com/thesyncim/goav1/internal/av1/restoration"
+	internalcdef "github.com/gtsteffaniak/go-av1/internal/av1/cdef"
+	internalrestoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
 )
 
 // CDEFPlane identifies a luma (Y) or chroma (U/V) plane for CDEF filtering.

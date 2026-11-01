@@ -1,8 +1,8 @@
 package goav1
 
 import (
-	internalobu "github.com/thesyncim/goav1/internal/av1/obu"
-	internalparser "github.com/thesyncim/goav1/internal/av1/parser"
+	internalobu "github.com/gtsteffaniak/go-av1/internal/av1/obu"
+	internalparser "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // OBUType identifies one of the AV1 Open Bitstream Unit types defined in

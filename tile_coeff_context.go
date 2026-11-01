@@ -1,6 +1,6 @@
 package goav1
 
-import internaltile "github.com/thesyncim/goav1/internal/av1/tile"
+import internaltile "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // TileCoeffEntropyContext is caller-owned top/left coefficient entropy context
 // storage for one superblock. Its zero value is ready for a fresh superblock.

@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // The oracle in motion_field_test.go keeps the old per-entry traversal and

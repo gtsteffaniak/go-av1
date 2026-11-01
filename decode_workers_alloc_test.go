@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	av1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	av1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // TestDecoderWorkersSteadyStateZeroAlloc pins the zero-allocation design on

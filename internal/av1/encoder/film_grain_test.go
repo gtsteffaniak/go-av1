@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 func TestAppendFilmGrainParamsPayloadSkippedBySequence(t *testing.T) {

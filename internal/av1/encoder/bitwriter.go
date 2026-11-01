@@ -3,7 +3,7 @@ package encoder
 import (
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 )
 
 type bitWriter struct {

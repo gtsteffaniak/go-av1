@@ -1,8 +1,8 @@
 package threading
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 func resetCDFCount(cdf *entropy.CDF) error {

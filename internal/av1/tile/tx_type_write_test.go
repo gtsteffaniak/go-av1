@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // TestWriteIntraTransformTypeRoundTrip is the oracle gate for the intra

@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // TestCDEFUnitFilterMaskMatchesPerBlock checks the cached per-unit mask path

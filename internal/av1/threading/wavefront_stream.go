@@ -5,7 +5,7 @@
 package threading
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // frameWorkReconView is a published snapshot of the deferred reconstruction

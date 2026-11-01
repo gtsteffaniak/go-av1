@@ -1,6 +1,6 @@
 package goav1
 
-import internalmotion "github.com/thesyncim/goav1/internal/av1/motion"
+import internalmotion "github.com/gtsteffaniak/go-av1/internal/av1/motion"
 
 // MotionVector is a quarter-pel (or eighth-pel, when high precision is on)
 // signed motion vector with Col/Row fields. It is the AV1 inter-prediction

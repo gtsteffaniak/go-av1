@@ -3,7 +3,7 @@ package threading
 import (
 	"sync/atomic"
 
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // FrameWorkLoopFilterTileEdges ports dav1d's tile-boundary transform-context

@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // TestConvolve2DHighBDScratchMatchesNoScratch asserts the pure-Go

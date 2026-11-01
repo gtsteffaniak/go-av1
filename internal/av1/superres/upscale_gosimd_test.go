@@ -13,7 +13,7 @@ import (
 	"simd/archsimd"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // runRowImplsSIMD upscales the same input with the Go SIMD kernel and the

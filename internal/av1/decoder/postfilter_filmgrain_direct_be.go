@@ -2,7 +2,7 @@
 
 package decoder
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // frameWorkFilmGrainPlaneU16 has no in-place sample view on big-endian hosts;
 // high bit depth keeps the staged film-grain path there.

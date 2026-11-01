@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/parser"
+import "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 // DecodeBlockLoopWithCoeffControllerPtrOwnedIntra is reserved for the decoder-owned
 // full tile walk. Its caller excludes external scratch observers and hooks.

@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
-	internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
-	"github.com/thesyncim/goav1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 // splitFrameOBUs rewrites an IVF stream so every OBU_FRAME becomes the

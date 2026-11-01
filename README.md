@@ -1,8 +1,8 @@
 # goav1
 
-[![CI](https://github.com/thesyncim/goav1/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/thesyncim/goav1/actions/workflows/ci.yml)
-[![Lint](https://github.com/thesyncim/goav1/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/thesyncim/goav1/actions/workflows/lint.yml)
-[![Test vectors](https://github.com/thesyncim/goav1/actions/workflows/testvectors.yml/badge.svg?branch=main)](https://github.com/thesyncim/goav1/actions/workflows/testvectors.yml)
+[![CI](https://github.com/gtsteffaniak/go-av1/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/gtsteffaniak/go-av1/actions/workflows/ci.yml)
+[![Lint](https://github.com/gtsteffaniak/go-av1/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/gtsteffaniak/go-av1/actions/workflows/lint.yml)
+[![Test vectors](https://github.com/gtsteffaniak/go-av1/actions/workflows/testvectors.yml/badge.svg?branch=main)](https://github.com/gtsteffaniak/go-av1/actions/workflows/testvectors.yml)
 
 goav1 is a pure-Go AV1 decoder with a realtime, WebRTC-oriented encoder and
 RTP/RTCP helpers. The root Go module has no third-party module dependencies and
@@ -19,7 +19,7 @@ including SIMD paths, are written in Go without handwritten assembly.
 See [SIMD validation and measurements](SIMD_PORT.md) for the selected paths.
 
 ~~~sh
-go get github.com/thesyncim/goav1
+go get github.com/gtsteffaniak/go-av1
 ~~~
 
 ## Decode an IVF file
@@ -34,7 +34,7 @@ import (
 	"log"
 	"os"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 func main() {
@@ -68,7 +68,7 @@ package main
 import (
 	"log"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 func main() {
@@ -179,7 +179,7 @@ see [cmd/dump_svc](cmd/dump_svc).
   and [encoder examples](example_encode_test.go)
 - [Change history](CHANGELOG.md)
 - [Security policy](SECURITY.md)
-- [Package API documentation](https://pkg.go.dev/github.com/thesyncim/goav1)
+- [Package API documentation](https://pkg.go.dev/github.com/gtsteffaniak/go-av1)
 
 ## License
 

@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // AVX2 16bpc (10- and 12-bit) translational motion compensation, ported from

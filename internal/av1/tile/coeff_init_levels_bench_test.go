@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 func coeffBenchClassName(class transform.Class) string {

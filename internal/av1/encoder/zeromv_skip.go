@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/tile"
+import "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // zeromv_skip.go ports libaom's realtime static-superblock exit (libaom
 // v3.13 av1/encoder): av1_source_content_sb's per-SB source SAD class

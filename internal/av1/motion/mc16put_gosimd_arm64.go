@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // dav1d-style 16bpc single-reference put (src/mc_tmpl.c put_8tap,

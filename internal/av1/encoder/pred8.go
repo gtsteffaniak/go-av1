@@ -3,8 +3,8 @@ package encoder
 import (
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // pred8.go is the encoder's fast path for 8-bit luma inter prediction at

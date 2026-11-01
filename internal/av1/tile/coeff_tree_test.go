@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 func TestDecodeLumaCoefficientsFollowsDav1dTXBReplay(t *testing.T) {

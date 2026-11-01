@@ -6,8 +6,8 @@ import (
 	"sync"
 	"testing"
 
-	internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
-	internalframe "github.com/thesyncim/goav1/internal/av1/frame"
+	internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
+	internalframe "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // publishedRowsChecker records a hash of every row a frame-threaded

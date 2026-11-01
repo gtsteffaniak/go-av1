@@ -18,7 +18,7 @@ import (
 	"runtime/metrics"
 	"testing"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 // benchVectorPath is the libaom 8-bit quantizer-00 IVF shipped in the

@@ -1,6 +1,6 @@
 package decoder
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // FrameWorkLayerPoolPostFilterRunner applies AV1 postfilters for callers that
 // publish references through a frame.LayerPool. It preserves the coded

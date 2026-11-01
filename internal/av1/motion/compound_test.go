@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // TestCompoundRound0 verifies the round_0 selection ported from libaom's

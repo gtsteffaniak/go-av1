@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // Go-native SIMD 8-bit single-prediction convolves (X, Y and 2D, plus the

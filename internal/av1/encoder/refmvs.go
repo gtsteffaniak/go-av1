@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/tile"
+import "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // bindRefmvs binds the tile scratch's dav1d refmvs rows for one serial
 // block-loop walk over walkReq. While bound, the scratch's mode context gets

@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/entropy"
+import "github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 
 // PartitionDecider chooses the partition for one interior tree node during an
 // encoding walk. It receives the same level/context/availability the decoder's

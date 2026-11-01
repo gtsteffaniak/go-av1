@@ -7,7 +7,7 @@ package rtp
 import (
 	"errors"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 )
 
 const DependencyDescriptorMandatorySize = 3

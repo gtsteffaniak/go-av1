@@ -5,8 +5,8 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 func TestCoeffWriterTrustedScanHotUsesCanonicalLayout(t *testing.T) {

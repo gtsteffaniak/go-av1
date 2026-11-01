@@ -1,6 +1,6 @@
 package threading
 
-import "github.com/thesyncim/goav1/internal/av1/tile"
+import "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 const (
 	frameWorkWedgeMasterSize = 64

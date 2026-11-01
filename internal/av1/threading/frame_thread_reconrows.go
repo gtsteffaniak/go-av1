@@ -7,7 +7,7 @@ package threading
 import (
 	"sync"
 
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // FrameThreadReconRows is the reconstruction progress of a frame-threaded

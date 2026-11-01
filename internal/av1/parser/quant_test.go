@@ -3,7 +3,7 @@ package parser
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 )
 
 func TestParseQuantizationParamsZeroDeltas(t *testing.T) {

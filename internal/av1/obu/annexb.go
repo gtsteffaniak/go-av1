@@ -6,7 +6,7 @@
 
 package obu
 
-import "github.com/thesyncim/goav1/internal/av1/bitstream"
+import "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 
 // AnnexBUnit is one OBU unit from an AV1 Annex B stream. Raw aliases the
 // caller-provided stream bytes.

@@ -7,8 +7,8 @@ package decoder
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // showExistingKeyTestState binds slot r to a key frame (CDF entry 0, MV grid

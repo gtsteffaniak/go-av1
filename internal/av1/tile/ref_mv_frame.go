@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/motion"
+import "github.com/gtsteffaniak/go-av1/internal/av1/motion"
 
 const refMVSLimit = (1 << 12) - 1
 

@@ -3,8 +3,8 @@ package encoder
 import (
 	"slices"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // palette_sc.go is SVT-AV1's luma palette search for the screen-content

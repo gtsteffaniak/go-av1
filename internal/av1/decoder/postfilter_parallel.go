@@ -4,10 +4,10 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/loopfilter"
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // FrameWorkPostFilterParallel is caller-owned, reusable scratch that lets the

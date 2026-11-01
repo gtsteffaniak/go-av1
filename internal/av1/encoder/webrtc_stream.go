@@ -3,8 +3,8 @@ package encoder
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/obu"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // webrtc_stream.go joins the streaming video encoder to the WebRTC packaging

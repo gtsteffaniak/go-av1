@@ -1,10 +1,10 @@
 package decoder
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/cdef"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // Frozen original complete unit staging walk from 5484d71c. Assembly and

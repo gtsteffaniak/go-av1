@@ -1,8 +1,8 @@
 package tile
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	av1restoration "github.com/thesyncim/goav1/internal/av1/restoration"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	av1restoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
 )
 
 const restorationUnitOffset = 8

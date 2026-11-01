@@ -3,10 +3,10 @@ package tile
 import (
 	"unsafe"
 
-	av1frame "github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	av1restoration "github.com/thesyncim/goav1/internal/av1/restoration"
-	"github.com/thesyncim/goav1/internal/av1/superres"
+	av1frame "github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	av1restoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
+	"github.com/gtsteffaniak/go-av1/internal/av1/superres"
 )
 
 const (

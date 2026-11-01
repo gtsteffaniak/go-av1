@@ -3,7 +3,7 @@ package goav1_test
 import (
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
+	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 func publicOverflowStride(width int) (height, stride int, ok bool) {

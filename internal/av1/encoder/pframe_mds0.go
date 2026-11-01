@@ -1,8 +1,8 @@
 package encoder
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // pframe_mds0.go is the light-PD1 MDS0 inter candidate decision, ported from

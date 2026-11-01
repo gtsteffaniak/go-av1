@@ -4,9 +4,9 @@ import (
 	"bytes"
 	"testing"
 
-	av1frame "github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	av1restoration "github.com/thesyncim/goav1/internal/av1/restoration"
+	av1frame "github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	av1restoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
 )
 
 // TestApplyRestorationFramePlaneInPlaceU16StripesMatchesFrame proves the

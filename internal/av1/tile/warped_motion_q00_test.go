@@ -3,7 +3,7 @@ package tile
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // TestWarpProjectionWithContextQ00Frame1MI80x4 pins WarpProjectionWithContext

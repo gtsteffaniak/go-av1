@@ -3,7 +3,7 @@ package container
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/container/isobmff"
+	"github.com/gtsteffaniak/go-av1/container/isobmff"
 )
 
 // AVIFPrimary describes the primary still image item in an AVIF/HEIF file.

@@ -3,8 +3,8 @@ package encoder_test
 import (
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 func TestEncodeScaledReferencePFrameLayerPoolDecodeMatchesRecon(t *testing.T) {

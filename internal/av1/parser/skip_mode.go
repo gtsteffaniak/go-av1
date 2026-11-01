@@ -6,7 +6,7 @@
 
 package parser
 
-import "github.com/thesyncim/goav1/internal/av1/bitstream"
+import "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 
 // SkipModeParams is the frame-level skip_mode_params() state after reference
 // mode selection.

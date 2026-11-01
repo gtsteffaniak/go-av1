@@ -13,7 +13,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 const (
 	// libaom convolve.h: ROUND0_BITS / COMPOUND_ROUND1_BITS for the compound

@@ -12,7 +12,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 )
 
 // lanes4ClampSets is the clamp ladder the four-lane kernels must be exact

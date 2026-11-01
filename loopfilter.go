@@ -1,6 +1,6 @@
 package goav1
 
-import internalloopfilter "github.com/thesyncim/goav1/internal/av1/loopfilter"
+import internalloopfilter "github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
 
 // LoopFilterModeDeltaClass selects between the AV1 zero-prediction and motion
 // mode-delta classes used by the loop filter.

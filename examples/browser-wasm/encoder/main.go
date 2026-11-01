@@ -12,8 +12,8 @@ import (
 	"time"
 	"unsafe"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/examples/browser-wasm/pattern"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/examples/browser-wasm/pattern"
 )
 
 // Pixel formats the worker can hand over; they match VideoFrame.format.

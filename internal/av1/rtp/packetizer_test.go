@@ -4,8 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
-	"github.com/thesyncim/goav1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 func appendPacketizerOBU(dst []byte, typ obu.Type, payload []byte) []byte {

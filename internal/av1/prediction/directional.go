@@ -6,7 +6,7 @@
 
 package prediction
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 var drIntraDerivative = [90]int16{
 	0, 0, 0,

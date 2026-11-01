@@ -1,6 +1,6 @@
 package threading
 
-import "github.com/thesyncim/goav1/internal/av1/tile"
+import "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // FrameWorkLoopFilterOrderedBuilder carries transform-edge contexts while an
 // encoder visits one tile in coding order. The generic record map remains

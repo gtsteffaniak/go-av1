@@ -1,6 +1,6 @@
 package goav1
 
-import internalsuperres "github.com/thesyncim/goav1/internal/av1/superres"
+import internalsuperres "github.com/gtsteffaniak/go-av1/internal/av1/superres"
 
 // Super-resolution upscaler constants. SuperResNum is the numerator used for
 // the scale ratio; SuperResDenomMin and SuperResDenomMax bound the allowed

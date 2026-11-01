@@ -11,7 +11,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // mc16TestRef builds a 16bpc reference plane (stride in samples) filled per

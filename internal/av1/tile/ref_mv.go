@@ -1,8 +1,8 @@
 package tile
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 const (

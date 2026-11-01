@@ -5,10 +5,10 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/quantize"
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/quantize"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // rdoq.go ports SVT-AV1's rate-distortion optimized quantization:

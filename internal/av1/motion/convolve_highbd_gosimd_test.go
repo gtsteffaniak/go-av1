@@ -10,7 +10,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 func makeHighBDRef(side, pad int, max uint16, randomize bool, rng *rand.Rand) frame.Plane {

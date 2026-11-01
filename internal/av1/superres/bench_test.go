@@ -3,7 +3,7 @@ package superres
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 func benchUpscale(b *testing.B, bitDepth uint8, srcWidth, dstWidth, height int) {

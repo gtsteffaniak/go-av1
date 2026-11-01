@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 )
 
 // TestWalkBlocksWriteRoundTrip is the oracle gate for the encoder partition

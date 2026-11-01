@@ -1,6 +1,6 @@
 package goav1
 
-import internaltile "github.com/thesyncim/goav1/internal/av1/tile"
+import internaltile "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // TileRootBlockLevel returns the root block partitioning level for a sequence
 // that uses 128x128 (true) or 64x64 (false) superblocks.

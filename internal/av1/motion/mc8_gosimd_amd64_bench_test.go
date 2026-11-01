@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // The AMD64 MC benchmarks run the public 8-bit predictors with the AVX2

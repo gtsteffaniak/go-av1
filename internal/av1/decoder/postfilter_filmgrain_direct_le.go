@@ -5,7 +5,7 @@ package decoder
 import (
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // frameWorkFilmGrainPlaneU16 returns a uint16 sample view of a little-endian

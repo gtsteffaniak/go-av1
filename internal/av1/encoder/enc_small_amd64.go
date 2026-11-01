@@ -6,7 +6,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
 )
 
 // AVX2 forms of the encoder's small arm64-only kernels. VPSADBW sums the

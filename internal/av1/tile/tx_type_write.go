@@ -1,8 +1,8 @@
 package tile
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // WriteIntraTransformType codes one luma intra tx_type, the forward of

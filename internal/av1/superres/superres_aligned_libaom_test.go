@@ -3,7 +3,7 @@ package superres
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // libaomSuperResAlignedRow0 captures the exact luma source row 0 (the

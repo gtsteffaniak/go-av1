@@ -1,6 +1,6 @@
 package goav1
 
-import internalrtp "github.com/thesyncim/goav1/internal/av1/rtp"
+import internalrtp "github.com/gtsteffaniak/go-av1/internal/av1/rtp"
 
 // RTPAggregationHeader is the parsed AV1 RTP aggregation header (Z/Y/W/N bits
 // and element count) defined by the AOM AV1 RTP payload specification.

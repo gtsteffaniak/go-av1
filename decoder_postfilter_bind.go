@@ -23,8 +23,8 @@ package goav1
 // for the stage they want.
 
 import (
-	internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
+	internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // DecoderFrameWorkCDEFIndexMapShape reports the column count, row count, and

@@ -6,7 +6,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // Targets without the dav1d-style 8-bit kernels (mc8_gosimd_arm64.go) always
 // run the general convolve paths.

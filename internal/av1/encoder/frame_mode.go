@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/bitstream"
+import "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 
 // FrameModeParams is the encoder-owned view of frame-level motion/transform
 // feature bits after skip_mode_params().

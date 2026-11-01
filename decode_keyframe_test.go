@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/container"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/container"
 )
 
 func ivfFirstFrame(t *testing.T, path string) []byte {

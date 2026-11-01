@@ -18,8 +18,8 @@ import (
 	"testing"
 	"time"
 
-	av1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	av1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // wavefrontTestVector is a single-tile all-intra clip with enough superblock

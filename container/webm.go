@@ -27,10 +27,16 @@ func ParseWebM(data []byte) (WebMTrack, error) {
 				if cp := tracksCodecPrivate(body); len(cp) > 0 {
 					codecPrivate = cp
 				}
-			case 0xA3, 0xA1: // SimpleBlock / Block
-				if block, ok := parseSimpleBlockPayload(body); ok {
-					blocks = append(blocks, block)
+			case 0xA3, 0xA1: // SimpleBlock / Block (inside BlockGroup)
+				for _, frame := range matroskaBlockFrames(body) {
+					blocks = append(blocks, frame)
 				}
+			case 0xA0: // BlockGroup — Block element carries frame(s)
+				walkBlockGroup(body, func(blockBody []byte) {
+					for _, frame := range matroskaBlockFrames(blockBody) {
+						blocks = append(blocks, frame)
+					}
+				})
 			default:
 				// Master elements: recurse into children.
 				if sz > 0 && isEBMLMaster(id) {
@@ -139,16 +145,168 @@ func findTrackCodecPrivate(entry []byte) []byte {
 	return nil
 }
 
-func parseSimpleBlockPayload(block []byte) ([]byte, bool) {
+// matroskaBlockFrames splits a SimpleBlock or Block element body into one or
+// more AV1 frame payloads (handles Matroska lacing).
+func matroskaBlockFrames(block []byte) [][]byte {
 	if len(block) < 4 {
-		return nil, false
+		return nil
 	}
 	trackLen := ebmlVIntLen(block[0])
 	if trackLen == 0 || len(block) < trackLen+3 {
-		return nil, false
+		return nil
 	}
-	payload := block[trackLen+2:]
-	return append([]byte(nil), payload...), true
+	flags := block[trackLen+2]
+	payload := block[trackLen+3:]
+	lace := (flags >> 1) & 0x3
+	switch lace {
+	case 0:
+		if len(payload) == 0 {
+			return nil
+		}
+		return [][]byte{append([]byte(nil), payload...)}
+	case 1:
+		return splitXiphLacedFrames(payload)
+	case 2:
+		return splitFixedSizeLacedFrames(payload)
+	case 3:
+		return splitEBMLLacedFrames(payload)
+	default:
+		return nil
+	}
+}
+
+func walkBlockGroup(group []byte, fn func(blockBody []byte)) {
+	off := 0
+	for off < len(group) {
+		id, sz, n, err := readEBMLElementHeader(group[off:])
+		if err != nil {
+			return
+		}
+		off += n
+		end := off + int(sz)
+		if end > len(group) {
+			end = len(group)
+		}
+		if id == 0xA1 {
+			fn(group[off:end])
+		}
+		off = end
+	}
+}
+
+func splitXiphLacedFrames(payload []byte) [][]byte {
+	if len(payload) == 0 {
+		return nil
+	}
+	off := 0
+	readLaceSize := func() (int, bool) {
+		size := 0
+		start := off
+		for off < len(payload) {
+			b := payload[off]
+			off++
+			size += int(b)
+			if b != 0xff {
+				return size, true
+			}
+		}
+		off = start
+		return 0, false
+	}
+	var sizes []int
+	for {
+		if off >= len(payload) {
+			break
+		}
+		start := off
+		size, ok := readLaceSize()
+		if !ok {
+			off = start
+			break
+		}
+		if size >= len(payload)-off {
+			off = start
+			break
+		}
+		sizes = append(sizes, size)
+	}
+	if len(sizes) == 0 {
+		return [][]byte{append([]byte(nil), payload...)}
+	}
+	var out [][]byte
+	off = 0
+	for _, sz := range sizes {
+		start := off
+		laceSize, ok := readLaceSize()
+		if !ok || laceSize != sz {
+			return [][]byte{append([]byte(nil), payload...)}
+		}
+		_ = start
+		if off+sz > len(payload) {
+			return nil
+		}
+		out = append(out, append([]byte(nil), payload[off:off+sz]...))
+		off += sz
+	}
+	if off < len(payload) {
+		out = append(out, append([]byte(nil), payload[off:]...))
+	}
+	return out
+}
+
+func splitFixedSizeLacedFrames(payload []byte) [][]byte {
+	if len(payload) < 1 {
+		return nil
+	}
+	frameSize := int(payload[0]) + 1
+	data := payload[1:]
+	if frameSize <= 0 || len(data) == 0 {
+		return nil
+	}
+	var out [][]byte
+	for len(data) >= frameSize {
+		out = append(out, append([]byte(nil), data[:frameSize]...))
+		data = data[frameSize:]
+	}
+	if len(data) > 0 {
+		out = append(out, append([]byte(nil), data...))
+	}
+	return out
+}
+
+func splitEBMLLacedFrames(payload []byte) [][]byte {
+	if len(payload) == 0 {
+		return nil
+	}
+	var sizes []int
+	off := 0
+	for off < len(payload) {
+		if off >= len(payload) {
+			break
+		}
+		sz, n, err := decodeEBMLSize(payload[off:])
+		if err != nil || n == 0 {
+			break
+		}
+		off += n
+		sizes = append(sizes, int(sz))
+	}
+	if len(sizes) == 0 {
+		return [][]byte{append([]byte(nil), payload...)}
+	}
+	var out [][]byte
+	for i, size := range sizes {
+		if i == len(sizes)-1 {
+			out = append(out, append([]byte(nil), payload[off:]...))
+			break
+		}
+		if off+size > len(payload) {
+			return nil
+		}
+		out = append(out, append([]byte(nil), payload[off:off+size]...))
+		off += size
+	}
+	return out
 }
 
 func readEBMLElementHeader(src []byte) (id uint32, size uint64, n int, err error) {

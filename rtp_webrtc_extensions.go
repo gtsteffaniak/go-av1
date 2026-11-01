@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 )
 
 const (

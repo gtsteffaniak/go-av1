@@ -7,8 +7,8 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // The full root load/store, MarkIntra and resetForSuperblock are unchanged from

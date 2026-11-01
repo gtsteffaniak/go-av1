@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/loopfilter"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // dav1d initialises the per-tile edge contexts to tx_lpf_y=2 and tx_lpf_uv=1

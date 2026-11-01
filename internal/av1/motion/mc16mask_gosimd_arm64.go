@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // 16bpc compound blends (dav1d src/arm/64/mc16.S avg / mask / w_mask), the

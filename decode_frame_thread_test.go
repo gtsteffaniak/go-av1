@@ -7,7 +7,7 @@ import (
 	"sync"
 	"testing"
 
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // frameThreadTestClips are single-tile inter clips (every frame takes the

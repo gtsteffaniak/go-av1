@@ -1,8 +1,8 @@
 package tile
 
 import (
-	av1frame "github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	av1frame "github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // RestorationFrameBorder is libaom's AOM_RESTORATION_FRAME_BORDER, the border

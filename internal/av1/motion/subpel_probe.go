@@ -1,6 +1,6 @@
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // subpel_probe.go is the motion-search probe fast path: the encoder's subpel
 // refinement predicts the same n x n luma block at several vectors within one

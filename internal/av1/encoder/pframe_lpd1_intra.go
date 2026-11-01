@@ -25,8 +25,8 @@ import (
 	"fmt"
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // intraChromaGeom is the chroma side of an intra block in an inter frame.

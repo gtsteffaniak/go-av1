@@ -3,7 +3,7 @@ package tile
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // MarkInterMotionAndFilters commits adjacent motion and interpolation-filter

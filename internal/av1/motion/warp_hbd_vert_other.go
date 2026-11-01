@@ -6,7 +6,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // Without the amd64 AVX2 kernels the 16bpc vertical warp pass is the scalar
 // one.

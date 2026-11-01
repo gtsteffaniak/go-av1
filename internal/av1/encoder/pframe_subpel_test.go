@@ -8,13 +8,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/encoder"
-	avframe "github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/ivf"
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/obu"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	avframe "github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // TestEncodePFrameSubpelMotion is the subpel gate: the second frame is the

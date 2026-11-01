@@ -6,7 +6,7 @@
 
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/cdef"
+import "github.com/gtsteffaniak/go-av1/internal/av1/cdef"
 
 // cdefDist8 is the scalar svt_aom_compute_cdef_dist_8bit_c on targets
 // without the Go SIMD kernel.

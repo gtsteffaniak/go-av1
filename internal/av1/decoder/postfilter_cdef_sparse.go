@@ -3,8 +3,8 @@ package decoder
 import (
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // Bounds are pixel coordinates inside one 64x64 luma (or subsampled) unit.

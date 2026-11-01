@@ -6,7 +6,7 @@
 
 package transform
 
-import "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+import "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 
 // init binds the Go-native SIMD four-lane DCT64 column and row kernels. Every
 // arm64 chip has NEON; the gate lets tests force the pure-Go path.

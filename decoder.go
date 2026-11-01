@@ -33,10 +33,10 @@ package goav1
 // and decoder_coeff_reconstruct.go.
 
 import (
-	internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
-	internallfmask "github.com/thesyncim/goav1/internal/av1/lfmask"
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
-	internaltile "github.com/thesyncim/goav1/internal/av1/tile"
+	internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
+	internallfmask "github.com/gtsteffaniak/go-av1/internal/av1/lfmask"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	internaltile "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // DecoderFrameWorkLoopFilterMasks is the frame-level dav1d-style deblocking

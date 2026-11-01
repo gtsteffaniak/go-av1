@@ -18,7 +18,7 @@ If you believe you have found a security issue in `goav1`, please do
    including a minimal reproducer (an `.ivf`, `.obu`, or captured RTP
    payload), the goav1 commit/tag, and the Go toolchain version.
 2. If you prefer, use GitHub's [private vulnerability reporting] on
-   `https://github.com/thesyncim/goav1` (Security tab > "Report a
+   `https://github.com/gtsteffaniak/go-av1` (Security tab > "Report a
    vulnerability") so the disclosure stays inside GitHub.
 
 [private vulnerability reporting]: https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing-information-about-vulnerabilities/privately-reporting-a-security-vulnerability
@@ -265,14 +265,14 @@ The decoder is **pure Go with no third-party module dependencies**.
 `go.mod`:
 
 ```
-module github.com/thesyncim/goav1
+module github.com/gtsteffaniak/go-av1
 
 go 1.27.0
 ```
 
 There is no `go.sum` file because the module has no external
 `require` directives. The only imports are from the Go standard
-library and `github.com/thesyncim/goav1/internal/...`. This is a
+library and `github.com/gtsteffaniak/go-av1/internal/...`. This is a
 deliberate design choice — see the "Pure Go. No CGO wrappers around C
 codecs." principle in `README.md` — and substantially reduces the
 upstream supply-chain risk.
@@ -311,5 +311,5 @@ with.
 
 No security advisories have been issued for `goav1` as of the date
 of this document. Future advisories will be published as GitHub
-Security Advisories on `https://github.com/thesyncim/goav1` and
+Security Advisories on `https://github.com/gtsteffaniak/go-av1` and
 referenced here.

@@ -7,8 +7,8 @@ package threading
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 func refRowsTestVisit(miRow uint16, ref tile.ReferenceFrame, mvRow int16) tile.BlockLoopVisit {

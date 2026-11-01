@@ -3,7 +3,7 @@ package container
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/container/isobmff"
+	"github.com/gtsteffaniak/go-av1/container/isobmff"
 )
 
 // MP4Sample is one AV1 sample from an MP4/MOV track (typically one temporal unit).

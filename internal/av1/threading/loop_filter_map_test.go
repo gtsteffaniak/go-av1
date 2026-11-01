@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/loopfilter"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 func testFrameWorkLoopFilterBlock(t testing.TB, block tile.BlockVisit) FrameWorkLoopFilterBlock {

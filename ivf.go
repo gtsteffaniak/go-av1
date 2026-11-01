@@ -1,6 +1,6 @@
 package goav1
 
-import internalivf "github.com/thesyncim/goav1/internal/av1/ivf"
+import internalivf "github.com/gtsteffaniak/go-av1/internal/av1/ivf"
 
 // IVF container size constants.
 //

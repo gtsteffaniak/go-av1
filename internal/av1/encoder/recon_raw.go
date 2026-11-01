@@ -3,7 +3,7 @@ package encoder
 import (
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp"
 )
 
 var addRawResidualToPredReconBlockImpl = addRawResidualToPredReconBlockPureGo

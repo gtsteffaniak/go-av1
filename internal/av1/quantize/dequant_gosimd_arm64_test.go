@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 )
 
 func dequantSIMDSupported() bool {

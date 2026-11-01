@@ -58,7 +58,7 @@ import (
 	"strings"
 	"time"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 // scaledPredEnvVar mirrors internal/av1/threading.frameWorkScaledRefAllowedEnv.

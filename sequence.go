@@ -1,6 +1,6 @@
 package goav1
 
-import internalparser "github.com/thesyncim/goav1/internal/av1/parser"
+import internalparser "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 // SequenceHeader is the parsed AV1 sequence_header_obu(): profile, level,
 // color config, operating points, decoder model, and feature enable bits.

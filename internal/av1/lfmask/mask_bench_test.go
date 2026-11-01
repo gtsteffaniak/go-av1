@@ -3,7 +3,7 @@ package lfmask
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // BenchmarkBuilderCreateInter asserts the mask build carries zero allocations so

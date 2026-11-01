@@ -6,7 +6,7 @@
 
 package restoration
 
-import "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+import "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 
 // init binds the Go-native SIMD Wiener passes on arm64 (NEON is mandatory on
 // every arm64 chip Go runs on). The assignment happens once, before any decoder

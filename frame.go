@@ -1,6 +1,6 @@
 package goav1
 
-import internalframe "github.com/thesyncim/goav1/internal/av1/frame"
+import internalframe "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // FrameFormat describes the geometry, bit depth, chroma subsampling, and
 // alignment of a decoded AV1 frame buffer.

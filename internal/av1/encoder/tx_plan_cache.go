@@ -1,8 +1,8 @@
 package encoder
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // realtimeInterTXPlanEntry is one precomputed realtime TX plan with its leaves

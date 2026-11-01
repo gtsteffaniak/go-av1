@@ -1,6 +1,6 @@
 package threading
 
-import "github.com/thesyncim/goav1/internal/av1/tile"
+import "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // Batch is a deterministic contiguous range of tile jobs assigned to one
 // worker lane. It is a plan, not a goroutine; execution policy stays separate.

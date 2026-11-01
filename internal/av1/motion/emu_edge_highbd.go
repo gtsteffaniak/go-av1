@@ -4,7 +4,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // High-bit-depth (10/12-bit) emulated-edge window. This is the 16bpc sibling of
 // emuEdge8 / emuEdgeWindow (emu_edge.go): dav1d's reconstruction

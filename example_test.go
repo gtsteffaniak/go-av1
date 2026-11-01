@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 // Example demonstrates the basic public API surface: opening a libaom IVF

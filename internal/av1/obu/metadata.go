@@ -9,7 +9,7 @@ package obu
 import (
 	"errors"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 )
 
 // MetadataType is the AV1 metadata_type leb128 field (spec section 6.7.1).

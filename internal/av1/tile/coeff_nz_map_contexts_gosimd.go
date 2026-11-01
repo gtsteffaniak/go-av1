@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // coeffNZMapPick4x2 gathers the two 4-row columns of a 16-lane vector loaded at

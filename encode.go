@@ -24,7 +24,7 @@ package goav1
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 // I420Frame is one 8-bit 4:2:0 picture. Y holds Width x Height luma samples

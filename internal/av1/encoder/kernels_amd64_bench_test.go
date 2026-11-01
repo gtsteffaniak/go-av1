@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
 )
 
 // The BenchmarkAMD64* benchmarks time each encoder AVX2 kernel against its

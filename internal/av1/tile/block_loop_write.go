@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/entropy"
+import "github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 
 // block_loop_write.go is the encoder-side superblock loop: it iterates root
 // blocks in the decoder's exact order and reuses the decoder's own carrier

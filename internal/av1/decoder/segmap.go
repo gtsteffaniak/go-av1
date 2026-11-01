@@ -4,7 +4,7 @@
 
 package decoder
 
-import "github.com/thesyncim/goav1/internal/av1/parser"
+import "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 // frameWorkSegMaps bounds the live segmentation maps: one per reference slot,
 // the planning frame's current map, and per in-flight frame its current map

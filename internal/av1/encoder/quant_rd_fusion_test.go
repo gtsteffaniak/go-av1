@@ -6,8 +6,8 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/quantize"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/quantize"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // Frozen c07ac861 prepare path. The old quantizer and following dispatched

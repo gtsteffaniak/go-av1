@@ -6,7 +6,7 @@
 
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/transform"
+import "github.com/gtsteffaniak/go-av1/internal/av1/transform"
 
 func coeffNZMapContextsArch(levels []uint8, size TransformSize, class transform.Class, scan []int16, eob int, contexts []int8, maxEOB int) bool {
 	return false

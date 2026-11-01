@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/lfmask"
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/lfmask"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 func TestDecoderCompactLoopFilterSelectionAndWorkerFallback(t *testing.T) {

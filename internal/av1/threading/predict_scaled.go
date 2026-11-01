@@ -7,9 +7,9 @@ package threading
 import (
 	"os"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // frameWorkScaledRefDisabledEnv force-disables routing scaled-reference inter

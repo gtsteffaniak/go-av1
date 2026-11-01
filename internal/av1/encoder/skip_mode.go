@@ -1,8 +1,8 @@
 package encoder
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // SkipModeParams is the encoder-owned view of skip_mode_params().

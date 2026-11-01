@@ -14,8 +14,8 @@ import (
 	"os"
 	"time"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/examples/browser-wasm/pattern"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/examples/browser-wasm/pattern"
 )
 
 func main() {

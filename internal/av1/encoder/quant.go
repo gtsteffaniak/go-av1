@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/bitstream"
+import "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 
 // QuantizationParams is the encoder-owned, syntax-width view of
 // quantization_params() from uncompressed_header().

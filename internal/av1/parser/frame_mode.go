@@ -6,7 +6,7 @@
 
 package parser
 
-import "github.com/thesyncim/goav1/internal/av1/bitstream"
+import "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 
 // FrameModeParams contains frame-level motion/transform feature bits after
 // skip_mode_params().

@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 // TestEncodePFrameSceneChange is the intra-in-P gate: frame 2 cuts to an

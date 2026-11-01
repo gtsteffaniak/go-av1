@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // refpad.go keeps edge-extended copies of the reference reconstructions, the
 // encoder side of SVT-AV1's padded reference pictures (svt_aom_generate_padding

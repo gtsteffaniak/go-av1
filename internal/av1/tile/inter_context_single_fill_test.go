@@ -6,7 +6,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // The oracle bodies below freeze MarkInter and MarkInterMotion from clean

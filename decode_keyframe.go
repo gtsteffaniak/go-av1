@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/thesyncim/goav1/container"
+	"github.com/gtsteffaniak/go-av1/container"
 )
 
 // KeyframeDecoder decodes standalone AV1 keyframes (still images and sync
@@ -112,6 +112,31 @@ func (k *KeyframeDecoder) DecodeSample(configOBUs []byte, sample []byte) (Keyfra
 	}
 	if len(unit) > cap(k.unitBuf) {
 		return KeyframeImage{}, fmt.Errorf("goav1: sample temporal unit %d bytes exceeds probe capacity %d", len(unit), cap(k.unitBuf))
+	}
+	k.unitBuf = k.unitBuf[:len(unit)]
+	copy(k.unitBuf, unit)
+	k.payloads[0] = k.unitBuf
+	if err := k.dec.Reset(); err != nil {
+		return KeyframeImage{}, err
+	}
+	frames, ok, err := k.dec.DecodeNext()
+	if err != nil {
+		return KeyframeImage{}, err
+	}
+	if !ok || len(frames) == 0 {
+		return KeyframeImage{}, errors.New("goav1: keyframe decode produced no frame")
+	}
+	return keyframeImageFromFrame(frames[0], k.out8), nil
+}
+
+// DecodeTemporalUnit decodes one low-overhead temporal unit produced by
+// container.BuildTemporalUnit or an IVF frame packet.
+func (k *KeyframeDecoder) DecodeTemporalUnit(unit []byte) (KeyframeImage, error) {
+	if k == nil || k.dec == nil {
+		return KeyframeImage{}, errors.New("goav1: nil keyframe decoder")
+	}
+	if len(unit) > cap(k.unitBuf) {
+		return KeyframeImage{}, fmt.Errorf("goav1: temporal unit %d bytes exceeds probe capacity %d", len(unit), cap(k.unitBuf))
 	}
 	k.unitBuf = k.unitBuf[:len(unit)]
 	copy(k.unitBuf, unit)

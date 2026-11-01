@@ -7,8 +7,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // BenchmarkAMD64Pred8 compares the encoder's AVX2 full-pel predictor

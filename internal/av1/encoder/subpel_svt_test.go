@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // svtBilinearReference is variance.c SUBPIX_VAR's two passes, transliterated.

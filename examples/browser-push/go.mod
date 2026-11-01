@@ -1,4 +1,4 @@
-module github.com/thesyncim/goav1/examples/browser-push
+module github.com/gtsteffaniak/go-av1/examples/browser-push
 
 go 1.27.0
 
@@ -8,7 +8,7 @@ require (
 	github.com/pion/rtcp v1.2.16
 	github.com/pion/rtp v1.10.2
 	github.com/pion/webrtc/v4 v4.2.15
-	github.com/thesyncim/goav1 v0.0.0
+	github.com/gtsteffaniak/go-av1 v0.0.0
 )
 
 require (
@@ -38,4 +38,4 @@ require (
 	golang.org/x/time v0.14.0 // indirect
 )
 
-replace github.com/thesyncim/goav1 => ../..
+replace github.com/gtsteffaniak/go-av1 => ../..

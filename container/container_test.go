@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/thesyncim/goav1/container"
+	"github.com/gtsteffaniak/go-av1/container"
 )
 
 func TestParseAVIFAndDecodeTemporalUnit(t *testing.T) {
@@ -51,7 +51,21 @@ func TestParseMP4FirstSample(t *testing.T) {
 }
 
 func TestParseWebM(t *testing.T) {
-	t.Skip("webm block payload to OBU merge needs matroska lacing/block-group handling; AVIF/MP4 work")
+	data, err := os.ReadFile(filepath.Join("testdata", "s8_4k.webm"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	track, err := container.ParseWebM(data)
+	if err != nil {
+		t.Fatal(err)
+	}
+	unit, err := container.TemporalUnitFromWebMSample(track, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(unit) == 0 {
+		t.Fatal("empty unit")
+	}
 }
 
 func TestBuildTemporalUnitWithoutConfig(t *testing.T) {

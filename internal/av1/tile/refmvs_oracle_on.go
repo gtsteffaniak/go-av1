@@ -5,7 +5,7 @@ package tile
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // Debug build: poison the refmvs row storage so any read of a cell that was

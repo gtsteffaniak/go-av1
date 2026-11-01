@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
 )
 
 // cdefDist8 is SVT-AV1's svt_aom_compute_cdef_dist_8bit_neon_dotprod

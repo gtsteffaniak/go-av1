@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 // loopfilter_realc_recon_test.go is the multi-tile mask-path safety net: it

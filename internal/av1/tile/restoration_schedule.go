@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/parser"
+import "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 const (
 	miSizePixels   = 4

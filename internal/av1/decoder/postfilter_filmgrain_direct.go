@@ -3,9 +3,9 @@ package decoder
 import (
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/filmgrain"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/filmgrain"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // frameWorkApplyFilmGrainForPublication writes grain from the reconstructed

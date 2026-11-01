@@ -4,7 +4,7 @@
 
 package dsp
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // FillPlaneBlock writes value to a rectangular plane block. High-bit-depth
 // samples are stored little-endian in two bytes.

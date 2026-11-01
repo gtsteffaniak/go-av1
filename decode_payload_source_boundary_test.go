@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"testing"
 
-	internalivf "github.com/thesyncim/goav1/internal/av1/ivf"
+	internalivf "github.com/gtsteffaniak/go-av1/internal/av1/ivf"
 )
 
 func TestReaderAtDecoderPayloadSourceTruncatedFrameHeaderParity(t *testing.T) {

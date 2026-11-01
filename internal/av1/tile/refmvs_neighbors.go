@@ -3,7 +3,7 @@ package tile
 import (
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // Neighbor-motion readers over the dav1d refmvs rows: decode.c

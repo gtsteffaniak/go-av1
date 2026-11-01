@@ -5,11 +5,11 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/lfmask"
-	"github.com/thesyncim/goav1/internal/av1/loopfilter"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/threading"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/lfmask"
+	"github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // lfmask_diff_test.go cross-validates the internal/av1/lfmask port (dav1d's
