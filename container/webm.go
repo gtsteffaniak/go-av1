@@ -7,6 +7,39 @@ import (
 // ParseWebM parses a WebM/MKV file with a V_AV1 track.
 func ParseWebM(data []byte) (WebMTrack, error) {
 	var codecPrivate []byte
+	var av1TrackNum uint64
+	var av1TrackOK bool
+	var scanTracks func([]byte)
+	scanTracks = func(buf []byte) {
+		off := 0
+		for off < len(buf) {
+			id, sz, n, err := readEBMLElementHeader(buf[off:])
+			if err != nil {
+				return
+			}
+			off += n
+			end := off + int(sz)
+			if sz == ebmlUnknownSize || end > len(buf) {
+				end = len(buf)
+			}
+			body := buf[off:end]
+			if id == 0x1654AE6B {
+				num, cp, ok := tracksAV1Track(body)
+				if ok {
+					av1TrackNum = num
+					av1TrackOK = true
+					if len(cp) > 0 {
+						codecPrivate = cp
+					}
+				}
+			} else if sz > 0 && isEBMLMaster(id) {
+				scanTracks(body)
+			}
+			off = end
+		}
+	}
+	scanTracks(data)
+
 	var blocks [][]byte
 	var walk func([]byte)
 	walk = func(buf []byte) {
@@ -23,17 +56,13 @@ func ParseWebM(data []byte) (WebMTrack, error) {
 			}
 			body := buf[off:end]
 			switch id {
-			case 0x1654AE6B: // Tracks
-				if cp := tracksCodecPrivate(body); len(cp) > 0 {
-					codecPrivate = cp
-				}
 			case 0xA3, 0xA1: // SimpleBlock / Block (inside BlockGroup)
-				for _, frame := range matroskaBlockFrames(body) {
+				for _, frame := range matroskaBlockFrames(body, av1TrackNum, av1TrackOK) {
 					blocks = append(blocks, frame)
 				}
 			case 0xA0: // BlockGroup — Block element carries frame(s)
 				walkBlockGroup(body, func(blockBody []byte) {
-					for _, frame := range matroskaBlockFrames(blockBody) {
+					for _, frame := range matroskaBlockFrames(blockBody, av1TrackNum, av1TrackOK) {
 						blocks = append(blocks, frame)
 					}
 				})
@@ -69,30 +98,66 @@ func ParseWebM(data []byte) (WebMTrack, error) {
 
 func isEBMLMaster(id uint32) bool {
 	switch id {
-	case 0x1A45DFA3, 0x18538067, 0x1F43B675, 0x1654AE6B, 0xAE, 0xBF:
+	case 0x1A45DFA3, 0x18538067, 0x1F43B675, 0x1654AE6B, 0xAE, 0xBF, 0xA0:
 		return true
 	default:
 		return false
 	}
 }
 
-func tracksCodecPrivate(tracks []byte) []byte {
+func tracksAV1Track(tracks []byte) (trackNum uint64, codecPrivate []byte, ok bool) {
 	off := 0
 	for off < len(tracks) {
 		id, sz, n, err := readEBMLElementHeader(tracks[off:])
 		if err != nil {
-			return nil
+			return 0, nil, false
 		}
 		off += n
 		end := off + int(sz)
 		if id == 0xAE {
-			if cp := findTrackCodecPrivate(tracks[off:end]); len(cp) > 0 {
-				return cp
+			num, cp, found := trackEntryAV1(tracks[off:end])
+			if found {
+				return num, cp, true
 			}
 		}
 		off = end
 	}
-	return nil
+	return 0, nil, false
+}
+
+func trackEntryAV1(entry []byte) (trackNum uint64, codecPrivate []byte, ok bool) {
+	off := 0
+	var codecID []byte
+	var num uint64
+	for off < len(entry) {
+		id, sz, n, err := readEBMLElementHeader(entry[off:])
+		if err != nil {
+			return 0, nil, false
+		}
+		off += n
+		end := off + int(sz)
+		switch id {
+		case 0xD7:
+			num = matroskaTrackNumber(entry[off:end])
+		case 0x86:
+			codecID = append([]byte(nil), entry[off:end]...)
+		case 0x63A2:
+			codecPrivate = append([]byte(nil), entry[off:end]...)
+		}
+		off = end
+	}
+	if string(codecID) != "V_AV1" {
+		return 0, nil, false
+	}
+	return num, codecPrivate, true
+}
+
+func tracksCodecPrivate(tracks []byte) []byte {
+	_, cp, ok := tracksAV1Track(tracks)
+	if !ok {
+		return nil
+	}
+	return cp
 }
 
 // WebMSample is one AV1 frame from a Matroska/WebM SimpleBlock.
@@ -120,39 +185,18 @@ func TemporalUnitFromWebMSample(track WebMTrack, sampleIndex int) ([]byte, error
 	return BuildTemporalUnit(config, track.Samples[sampleIndex].Data)
 }
 
-func findTrackCodecPrivate(entry []byte) []byte {
-	off := 0
-	var codecID []byte
-	var codecPrivate []byte
-	for off < len(entry) {
-		id, sz, n, err := readEBMLElementHeader(entry[off:])
-		if err != nil {
-			return nil
-		}
-		off += n
-		end := off + int(sz)
-		switch id {
-		case 0x86:
-			codecID = append([]byte(nil), entry[off:end]...)
-		case 0x63A2:
-			codecPrivate = append([]byte(nil), entry[off:end]...)
-		}
-		off = end
-	}
-	if string(codecID) == "V_AV1" {
-		return codecPrivate
-	}
-	return nil
-}
-
 // matroskaBlockFrames splits a SimpleBlock or Block element body into one or
 // more AV1 frame payloads (handles Matroska lacing).
-func matroskaBlockFrames(block []byte) [][]byte {
+func matroskaBlockFrames(block []byte, wantTrack uint64, filterTrack bool) [][]byte {
 	if len(block) < 4 {
 		return nil
 	}
 	trackLen := ebmlVIntLen(block[0])
 	if trackLen == 0 || len(block) < trackLen+3 {
+		return nil
+	}
+	trackNum := matroskaTrackNumber(block[:trackLen])
+	if filterTrack && trackNum != wantTrack {
 		return nil
 	}
 	flags := block[trackLen+2]
@@ -198,58 +242,30 @@ func splitXiphLacedFrames(payload []byte) [][]byte {
 	if len(payload) == 0 {
 		return nil
 	}
-	off := 0
-	readLaceSize := func() (int, bool) {
+	var out [][]byte
+	p := 0
+	end := len(payload)
+	for p < end {
 		size := 0
-		start := off
-		for off < len(payload) {
-			b := payload[off]
-			off++
+		for {
+			if p >= end {
+				return out
+			}
+			b := payload[p]
+			p++
 			size += int(b)
 			if b != 0xff {
-				return size, true
+				break
 			}
 		}
-		off = start
-		return 0, false
-	}
-	var sizes []int
-	for {
-		if off >= len(payload) {
-			break
+		if p+size > end {
+			if p < end {
+				out = append(out, append([]byte(nil), payload[p:end]...))
+			}
+			return out
 		}
-		start := off
-		size, ok := readLaceSize()
-		if !ok {
-			off = start
-			break
-		}
-		if size >= len(payload)-off {
-			off = start
-			break
-		}
-		sizes = append(sizes, size)
-	}
-	if len(sizes) == 0 {
-		return [][]byte{append([]byte(nil), payload...)}
-	}
-	var out [][]byte
-	off = 0
-	for _, sz := range sizes {
-		start := off
-		laceSize, ok := readLaceSize()
-		if !ok || laceSize != sz {
-			return [][]byte{append([]byte(nil), payload...)}
-		}
-		_ = start
-		if off+sz > len(payload) {
-			return nil
-		}
-		out = append(out, append([]byte(nil), payload[off:off+sz]...))
-		off += sz
-	}
-	if off < len(payload) {
-		out = append(out, append([]byte(nil), payload[off:]...))
+		out = append(out, append([]byte(nil), payload[p:p+size]...))
+		p += size
 	}
 	return out
 }
@@ -346,7 +362,13 @@ func ebmlVIntLen(b byte) int {
 
 func decodeEBMLVInt(src []byte) uint64 {
 	n := ebmlVIntLen(src[0])
-	if n == 0 || len(src) < n {
+	if n == 0 {
+		if len(src) == 1 {
+			return uint64(src[0])
+		}
+		return 0
+	}
+	if len(src) < n {
 		return 0
 	}
 	mask := byte(0xFF) >> n
@@ -355,6 +377,16 @@ func decodeEBMLVInt(src []byte) uint64 {
 		v = (v << 8) | uint64(src[i])
 	}
 	return v
+}
+
+func matroskaTrackNumber(src []byte) uint64 {
+	if len(src) == 0 {
+		return 0
+	}
+	if ebmlVIntLen(src[0]) == 0 {
+		return uint64(src[0])
+	}
+	return decodeEBMLVInt(src)
 }
 
 const ebmlUnknownSize = ^uint64(0)

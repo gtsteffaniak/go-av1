@@ -17,9 +17,9 @@ type MP4Sample struct {
 
 // MP4Track holds av1C and samples from the first AV1 (av01) video track.
 type MP4Track struct {
-	Av1C     Av1C
-	HasAv1C  bool
-	Samples  []MP4Sample
+	Av1C      Av1C
+	HasAv1C   bool
+	Samples   []MP4Sample
 	Timescale uint32
 }
 
@@ -34,10 +34,13 @@ func ParseMP4(data []byte) (MP4Track, error) {
 	}
 	stbl := ct.Moov.ImageTrackStbl()
 	if stbl == nil {
-		return MP4Track{}, fmt.Errorf("container: mp4 missing video stbl")
+		return MP4Track{}, fmt.Errorf("container: mp4 missing AV1 video stbl")
 	}
 	av1c, ok := mp4TrackAv1C(stbl)
 	out := MP4Track{}
+	if ts, ok := ct.Moov.AV1TrackMediaTimescale(); ok {
+		out.Timescale = ts
+	}
 	if ok {
 		p, err := ParseAv1C(av1c.ConfigOBUs)
 		if err != nil {
@@ -51,29 +54,36 @@ func ParseMP4(data []byte) (MP4Track, error) {
 	if err != nil {
 		return MP4Track{}, err
 	}
-	if ct.Mdat == nil {
+	if len(ct.Mdats) == 0 && ct.Mdat == nil {
 		return MP4Track{}, fmt.Errorf("container: mp4 missing mdat")
 	}
-	mdatBase := ct.MdatOffset
 	out.Samples = make([]MP4Sample, 0, len(table))
 	for i, s := range table {
-		if s.Offset < mdatBase {
-			return MP4Track{}, fmt.Errorf("container: sample %d offset before mdat", i)
+		if s.Size == 0 {
+			return MP4Track{}, fmt.Errorf("container: sample %d empty", i)
 		}
-		rel := s.Offset - mdatBase
-		end := rel + uint64(s.Size)
-		if end > uint64(len(ct.Mdat.Data)) {
-			return MP4Track{}, fmt.Errorf("container: sample %d out of mdat", i)
+		end, err := checkedSampleEnd(s.Offset, uint64(s.Size))
+		if err != nil {
+			return MP4Track{}, fmt.Errorf("container: sample %d: %w", i, err)
 		}
+		_ = end
+		chunk, err := ct.ReadPayloadAt(s.Offset, uint64(s.Size))
 		out.Samples = append(out.Samples, MP4Sample{
 			Index:  i,
 			Offset: s.Offset,
 			Size:   s.Size,
 			IsSync: s.IsSync,
-			Data:   append([]byte(nil), ct.Mdat.Data[rel:end]...),
+			Data:   append([]byte(nil), chunk...),
 		})
 	}
 	return out, nil
+}
+
+func checkedSampleEnd(offset, size uint64) (uint64, error) {
+	if size > ^uint64(0)-offset {
+		return 0, fmt.Errorf("sample size overflow")
+	}
+	return offset + size, nil
 }
 
 // TemporalUnitFromMP4Sample builds a low-overhead temporal unit for one MP4 sample.

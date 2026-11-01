@@ -47,6 +47,9 @@ func BuildGrid(g GridImage) (*Container, error) {
 	if g.Rows < 1 || g.Columns < 1 {
 		return nil, fmt.Errorf("%w: grid must have at least 1 row × 1 column", ErrInvalid)
 	}
+	if g.Rows > 256 || g.Columns > 256 {
+		return nil, fmt.Errorf("%w: grid rows/columns exceed 256", ErrInvalid)
+	}
 	expected := g.Rows * g.Columns
 	if len(g.Tiles) != expected {
 		return nil, fmt.Errorf("%w: grid expects %d tiles, got %d", ErrInvalid, expected, len(g.Tiles))

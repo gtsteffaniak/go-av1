@@ -177,6 +177,20 @@ func ParseMdia(payload []byte) (*Mdia, error) {
 			}
 			children[i] = minf
 		}
+		if rb.Type == TypeHdlr {
+			hdlr, err := ParseHdlr(rb.Payload)
+			if err != nil {
+				return nil, err
+			}
+			children[i] = hdlr
+		}
+		if rb.Type == TypeMdhd {
+			mdhd, err := ParseMdhd(rb.Payload)
+			if err != nil {
+				return nil, err
+			}
+			children[i] = mdhd
+		}
 	}
 	return &Mdia{Children: children}, nil
 }

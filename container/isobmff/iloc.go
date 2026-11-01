@@ -204,6 +204,9 @@ func ParseIloc(payload []byte) (*Iloc, error) {
 	default:
 		return nil, fmt.Errorf("%w: iloc version %d", ErrInvalid, fbh.Version)
 	}
+	if itemCount > uint32(c.remaining()) {
+		return nil, fmt.Errorf("%w: iloc item_count %d exceeds payload", ErrTruncated, itemCount)
+	}
 	i.Items = make([]IlocItem, 0, itemCount)
 
 	for n := uint32(0); n < itemCount; n++ {

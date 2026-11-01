@@ -44,16 +44,15 @@ type Sequence struct {
 	Frames []SequenceFrame
 }
 
-// BuildSequence assembles a complete AVIS container from s. The
-// returned byte slice is ready to write to disk; the container's
-// ftyp brand is "avis" with "miaf" + "msf1" compatibility.
-//
-// Every frame is a sync sample. The first frame also serves as the
-// primary still item so viewers that don't understand sequences can
-// render a single-frame poster.
+// BuildSequence assembles a complete AVIS container from s. Sync-sample
+// membership follows each frame's IsSync value; non-sync frames are omitted
+// from stss. The first frame also serves as the primary still item.
 func BuildSequence(s Sequence) ([]byte, error) {
 	if len(s.Frames) == 0 {
 		return nil, fmt.Errorf("%w: sequence has no frames", ErrInvalid)
+	}
+	if s.Width == 0 || s.Height == 0 {
+		return nil, fmt.Errorf("%w: sequence width/height must be non-zero", ErrInvalid)
 	}
 	if s.Timescale == 0 {
 		s.Timescale = 1000
@@ -67,6 +66,9 @@ func BuildSequence(s Sequence) ([]byte, error) {
 	sampleOffsets := make([]uint32, len(s.Frames)) // mdat-relative offsets
 	sampleSizes := make([]uint32, len(s.Frames))
 	for i, f := range s.Frames {
+		if len(f.AV1Bitstream) == 0 {
+			return nil, fmt.Errorf("%w: sequence frame %d empty", ErrInvalid, i)
+		}
 		sampleOffsets[i] = uint32(mdat.Len())
 		sampleSizes[i] = uint32(len(f.AV1Bitstream))
 		mdat.Write(f.AV1Bitstream)

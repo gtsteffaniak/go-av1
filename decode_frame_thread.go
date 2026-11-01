@@ -303,12 +303,13 @@ type decoderGrainOutput struct {
 // synthesized from its stored parameters; the reconstructed surface stays the
 // clean reference. Other frames are returned as is.
 func (p *decoderFramePipeline) outputImage(fc *decoderFrameContext) (*Frame, error) {
-	if !fc.event.FilmGrain.Apply {
+	if p.d.postFilter.SkipFilmGrain || !fc.event.FilmGrain.Apply {
 		return fc.output, nil
 	}
 	if p.grainUsed == len(p.grain) {
 		g := &decoderGrainOutput{}
 		g.runner.Parallel = &p.grainParallel
+		g.runner.SkipFilmGrain = p.d.postFilter.SkipFilmGrain
 		p.grain = append(p.grain, g)
 	}
 	g := p.grain[p.grainUsed]
@@ -710,6 +711,7 @@ func newDecoderFramePipeline(d *Decoder, n int, plan DecoderFrameWorkResidualStr
 		fc.lfTileEdges.Preseed(arena.takeBytes(tileEdges))
 		fc.postFilter.size = postArena
 		fc.postFilter.runner.Scratch = decoderPostFilterScratchFromArena(postArena, &arena)
+		fc.postFilter.SkipFilmGrain = d.postFilter.SkipFilmGrain
 		fc.postParallel.Workers = workers
 		fc.postFilter.Parallel = &fc.postParallel
 		rt := runtime

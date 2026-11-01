@@ -3,6 +3,7 @@ package isobmff
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 )
@@ -18,7 +19,9 @@ type Container struct {
 	// for still images.
 	Moov *Moov
 	Mdat *Mdat
-	// MdatOffset is the absolute file offset of the mdat payload (first byte
+	// Mdats lists every mdat payload in file order (ParseContainer appends each).
+	Mdats []MdatRegion
+	// MdatOffset is the absolute file offset of the most recently parsed mdat
 	// after the mdat header). It is set by [ParseContainer] and used by
 	// [Container.ItemData] to resolve iloc extents of construction_method 0.
 	MdatOffset uint64
@@ -81,8 +84,7 @@ func ParseContainer(data []byte) (*Container, error) {
 			if err != nil {
 				return nil, err
 			}
-			ct.Mdat = md
-			ct.MdatOffset = off + hdr.HeaderLen
+			ct.appendMdatRegion(off+hdr.HeaderLen, md.Data)
 		default:
 			ct.Extras = append(ct.Extras, &RawBox{
 				Type:    hdr.Type,
@@ -157,6 +159,10 @@ func ParseIprpPromoted(payload []byte) (*Iprp, error) {
 			promoted, err = ParseAv1C(rb.Payload)
 		case TypeColr:
 			promoted, err = ParseColr(rb.Payload)
+			if errors.Is(err, ErrColrUnknownType) {
+				err = nil
+				promoted = nil
+			}
 		case TypePasp:
 			promoted, err = ParsePasp(rb.Payload)
 		case TypeIrot:
@@ -264,15 +270,11 @@ func (ct *Container) ItemData(itemID uint32) ([]byte, error) {
 	out := make([]byte, 0, total)
 	for _, ex := range item.Extents {
 		fileOff := item.BaseOffset + ex.Offset
-		if fileOff < ct.MdatOffset {
-			return nil, fmt.Errorf("%w: item %d extent offset %d < mdat offset %d", ErrInvalid, itemID, fileOff, ct.MdatOffset)
+		chunk, err := ct.readFileRange(fileOff, ex.Length)
+		if err != nil {
+			return nil, fmt.Errorf("item %d extent: %w", itemID, err)
 		}
-		rel := fileOff - ct.MdatOffset
-		end := rel + ex.Length
-		if end > uint64(len(ct.Mdat.Data)) {
-			return nil, fmt.Errorf("%w: item %d extent runs past mdat (%d..%d of %d)", ErrInvalid, itemID, rel, end, len(ct.Mdat.Data))
-		}
-		out = append(out, ct.Mdat.Data[rel:end]...)
+		out = append(out, chunk...)
 	}
 	return out, nil
 }

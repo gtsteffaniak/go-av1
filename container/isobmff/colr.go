@@ -1,6 +1,13 @@
 package isobmff
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+// ErrColrUnknownType is returned when a colr box uses an unrecognized colour_type.
+// Callers may preserve the original RawBox bytes.
+var ErrColrUnknownType = errors.New("isobmff: colr unknown colour_type")
 
 // ColrType selects the representation carried inside a [Colr] box.
 type ColrType FourCC
@@ -72,7 +79,7 @@ func ParseColr(payload []byte) (*Colr, error) {
 	case ColrTypeRICC, ColrTypeProf:
 		p.ICC = append([]byte(nil), rest...)
 	default:
-		return nil, fmt.Errorf("%w: colr unknown colour_type %q", ErrInvalid, p.Type)
+		return nil, fmt.Errorf("%w: colr unknown colour_type %q", ErrColrUnknownType, p.Type)
 	}
 	return p, nil
 }

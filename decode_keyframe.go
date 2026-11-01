@@ -126,6 +126,9 @@ func (k *KeyframeDecoder) DecodeSample(configOBUs []byte, sample []byte) (Keyfra
 	if !ok || len(frames) == 0 {
 		return KeyframeImage{}, errors.New("goav1: keyframe decode produced no frame")
 	}
+	if len(frames) > 1 {
+		return KeyframeImage{}, fmt.Errorf("goav1: keyframe decode produced %d frames", len(frames))
+	}
 	return keyframeImageFromFrame(frames[0], k.out8), nil
 }
 
@@ -150,6 +153,9 @@ func (k *KeyframeDecoder) DecodeTemporalUnit(unit []byte) (KeyframeImage, error)
 	}
 	if !ok || len(frames) == 0 {
 		return KeyframeImage{}, errors.New("goav1: keyframe decode produced no frame")
+	}
+	if len(frames) > 1 {
+		return KeyframeImage{}, fmt.Errorf("goav1: keyframe decode produced %d frames", len(frames))
 	}
 	return keyframeImageFromFrame(frames[0], k.out8), nil
 }
@@ -179,14 +185,18 @@ func keyframeImageFromFrame(f *Frame, out8 bool) KeyframeImage {
 		NativeChroma420: bps == 1 && f.U.Width > 0,
 	}
 	if out8 && bps > 1 {
+		bitDepth := int(f.Format.BitDepth)
+		if bitDepth <= 8 {
+			bitDepth = bps * 8
+		}
 		img.BytesPerSample = 1
 		img.YStride = f.Y.Width
 		if f.U.Width > 0 {
 			img.UVStride = f.U.Width
 		}
-		img.Y = downconvertPlane8(f.Y, bps)
-		img.U = downconvertPlane8(f.U, bps)
-		img.V = downconvertPlane8(f.V, bps)
+		img.Y = downconvertPlane8(f.Y, bps, bitDepth)
+		img.U = downconvertPlane8(f.U, bps, bitDepth)
+		img.V = downconvertPlane8(f.V, bps, bitDepth)
 		return img
 	}
 	img.Y = f.Y.Pix
@@ -197,9 +207,17 @@ func keyframeImageFromFrame(f *Frame, out8 bool) KeyframeImage {
 	return img
 }
 
-func downconvertPlane8(p FramePlane, bps int) []byte {
+func downconvertPlane8(p FramePlane, bps int, bitDepth int) []byte {
 	if p.Width == 0 || p.Height == 0 {
 		return nil
+	}
+	if bitDepth <= 8 {
+		bitDepth = 8
+	}
+	shift := bitDepth - 8
+	round := 1 << (shift - 1)
+	if shift <= 0 {
+		round = 0
 	}
 	out := make([]byte, p.Width*p.Height)
 	o := 0
@@ -211,7 +229,9 @@ func downconvertPlane8(p FramePlane, bps int) []byte {
 			switch bps {
 			case 2:
 				v = int(binary.LittleEndian.Uint16(p.Pix[sampleOff:]))
-				v = (v + 2) >> 2
+				if shift > 0 {
+					v = (v + round) >> shift
+				}
 			default:
 				v = int(p.Pix[sampleOff]) << (8 - bps*8)
 			}

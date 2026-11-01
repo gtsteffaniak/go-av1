@@ -110,34 +110,157 @@ func (s *Stbl) SampleTable() ([]Sample, error) {
 			sampleIdx++
 		}
 	}
+	if sampleIdx != stsz.SampleCount {
+		return nil, fmt.Errorf("%w: stsc produced %d samples, stsz declares %d", ErrInvalid, sampleIdx, stsz.SampleCount)
+	}
 	return out, nil
 }
 
-// ImageTrackStbl returns the Stbl of the first video/image track in
-// the Moov, or nil if not present.
-func (m *Moov) ImageTrackStbl() *Stbl {
-	for _, ch := range m.Children {
-		trak, ok := ch.(*Trak)
+// trakAV1VideoStbl returns the stbl for the first track whose handler is
+// vide/pict and whose sample description includes an av01 entry.
+func trakAV1VideoStbl(trak *Trak) *Stbl {
+	if trak == nil {
+		return nil
+	}
+	var hdlr *Hdlr
+	var stbl *Stbl
+	for _, ch := range trak.Children {
+		mdia, ok := ch.(*Mdia)
 		if !ok {
 			continue
 		}
-		for _, tc := range trak.Children {
-			mdia, ok := tc.(*Mdia)
-			if !ok {
-				continue
-			}
-			for _, mc := range mdia.Children {
-				minf, ok := mc.(*Minf)
-				if !ok {
-					continue
-				}
-				for _, mic := range minf.Children {
-					if stbl, ok := mic.(*Stbl); ok {
-						return stbl
+		for _, mc := range mdia.Children {
+			switch b := mc.(type) {
+			case *Hdlr:
+				hdlr = b
+			case *Minf:
+				for _, mic := range b.Children {
+					if s, ok := mic.(*Stbl); ok {
+						stbl = s
 					}
 				}
 			}
 		}
 	}
+	if stbl == nil || hdlr == nil {
+		return nil
+	}
+	switch hdlr.HandlerType {
+	case FourCCOf("vide"), FourCCOf("pict"):
+	default:
+		return nil
+	}
+	if !stblHasAv01SampleEntry(stbl) {
+		return nil
+	}
+	return stbl
+}
+
+func stblHasAv01SampleEntry(stbl *Stbl) bool {
+	for _, ch := range stbl.Children {
+		rb, ok := ch.(*RawBox)
+		if !ok || rb.Type != TypeStsd {
+			continue
+		}
+		payload := rb.Payload
+		if len(payload) < 8 {
+			continue
+		}
+		entries, err := ReadChildren(payload[8:])
+		if err != nil {
+			continue
+		}
+		for _, ent := range entries {
+			er, ok := ent.(*RawBox)
+			if ok && er.Type.Equal("av01") {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// ImageTrackStbl returns the Stbl of the first AV1 video/image track in
+// the Moov, or nil if not present.
+func (m *Moov) ImageTrackStbl() *Stbl {
+	for _, ch := range m.Children {
+		if trak, ok := ch.(*Trak); ok {
+			if stbl := trakAV1VideoStbl(trak); stbl != nil {
+				return stbl
+			}
+		}
+	}
 	return nil
+}
+
+// AV1TrackMediaTimescale returns the mdhd timescale for the first AV1 track.
+func (m *Moov) AV1TrackMediaTimescale() (uint32, bool) {
+	for _, ch := range m.Children {
+		trak, ok := ch.(*Trak)
+		if !ok || trakAV1VideoStbl(trak) == nil {
+			continue
+		}
+		if ts, ok := trakMediaTimescale(trak); ok {
+			return ts, true
+		}
+	}
+	return 0, false
+}
+
+func trakMediaTimescale(trak *Trak) (uint32, bool) {
+	for _, ch := range trak.Children {
+		mdia, ok := ch.(*Mdia)
+		if !ok {
+			continue
+		}
+		for _, mc := range mdia.Children {
+			if mdhd, ok := mc.(*Mdhd); ok {
+				return mdhd.Timescale, true
+			}
+			if rb, ok := mc.(*RawBox); ok && rb.Type == TypeMdhd {
+				mdhd, err := ParseMdhd(rb.Payload)
+				if err != nil {
+					return 0, false
+				}
+				return mdhd.Timescale, true
+			}
+		}
+	}
+	return 0, false
+}
+
+// Mdhd is the media header box (§8.4.2).
+type Mdhd struct {
+	FullBoxHeader
+	Timescale uint32
+}
+
+func (*Mdhd) BoxType() FourCC { return TypeMdhd }
+
+func (m *Mdhd) MarshalPayload() ([]byte, error) {
+	return nil, fmt.Errorf("%w: mdhd marshal not implemented", ErrInvalid)
+}
+
+func ParseMdhd(payload []byte) (*Mdhd, error) {
+	fbh, rest, err := readFullBoxHeader(payload)
+	if err != nil {
+		return nil, err
+	}
+	c := newCursor(rest)
+	m := &Mdhd{FullBoxHeader: fbh}
+	if fbh.Version == 1 {
+		_ = c.readU64() // creation
+		_ = c.readU64() // modification
+		m.Timescale = c.readU32()
+		_ = c.readU64() // duration
+	} else {
+		_ = c.readU32()
+		_ = c.readU32()
+		m.Timescale = c.readU32()
+		_ = c.readU32()
+	}
+	if c.err != nil {
+		return nil, c.err
+	}
+	return m, nil
 }

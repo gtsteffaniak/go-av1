@@ -52,6 +52,12 @@ func ParseAv1C(payload []byte) (Av1C, error) {
 	if len(payload) > 4 {
 		p.ConfigOBUs = append([]byte(nil), payload[4:]...)
 	}
+	if p.Marker != 1 {
+		return Av1C{}, fmt.Errorf("container: av1C marker %d != 1", p.Marker)
+	}
+	if p.Version != 1 {
+		return Av1C{}, fmt.Errorf("container: av1C version %d != 1", p.Version)
+	}
 	return p, nil
 }
 
@@ -79,6 +85,7 @@ func BuildTemporalUnit(configOBUs []byte, sample []byte) ([]byte, error) {
 		return nil, errors.New("container: no OBUs in config or sample")
 	}
 	enc := make([]internalobu.Unit, 0, len(configUnits)+len(sampleUnits))
+	frameOBUs := 0
 	for _, u := range configUnits {
 		if u.Header.Type == internalobu.TypeTemporalDelimiter {
 			continue
@@ -89,7 +96,13 @@ func BuildTemporalUnit(configOBUs []byte, sample []byte) ([]byte, error) {
 		if u.Header.Type == internalobu.TypeTemporalDelimiter {
 			continue
 		}
+		if u.Header.Type == internalobu.TypeFrame {
+			frameOBUs++
+		}
 		enc = append(enc, u)
+	}
+	if frameOBUs > 1 {
+		return nil, fmt.Errorf("container: sample contains %d frame OBUs", frameOBUs)
 	}
 	if len(enc) == 0 {
 		return nil, errors.New("container: no frame OBUs after merge")
