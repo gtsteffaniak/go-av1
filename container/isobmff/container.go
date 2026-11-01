@@ -259,7 +259,7 @@ func (ct *Container) ItemData(itemID uint32) ([]byte, error) {
 	if item.ConstructionMethod != ConstructionFileOffset {
 		return nil, fmt.Errorf("%w: item %d uses construction_method %d", ErrUnsupportedConstruction, itemID, item.ConstructionMethod)
 	}
-	if ct.Mdat == nil {
+	if len(ct.Mdats) == 0 && ct.Mdat == nil {
 		return nil, fmt.Errorf("%w: item %d references mdat but none present", ErrInvalid, itemID)
 	}
 
@@ -284,14 +284,19 @@ func (ct *Container) ItemData(itemID uint32) ([]byte, error) {
 var ErrUnsupportedConstruction = fmt.Errorf("%w: unsupported construction_method", ErrInvalid)
 
 // WriteTo serializes the container to w. Boxes are written in this order:
-// ftyp, extras (preserved order), meta, mdat. Iloc offsets inside meta are
-// patched after layout so they resolve correctly against the written mdat.
+// ftyp, extras (preserved order), meta, moov (when present), every mdat region
+// in parse order. Iloc offsets inside meta are patched after layout so they
+// resolve correctly against the first written mdat payload.
 func (ct *Container) WriteTo(w io.Writer) (int64, error) {
 	if ct.Ftyp == nil {
 		return 0, fmt.Errorf("%w: container missing ftyp", ErrInvalid)
 	}
+	mdatRegions := ct.Mdats
+	if len(mdatRegions) == 0 && ct.Mdat != nil {
+		mdatRegions = []MdatRegion{{PayloadOffset: ct.MdatOffset, Data: ct.Mdat.Data}}
+	}
 	// First pass: marshal everything to compute byte offsets.
-	var ftypBuf, metaBuf, mdatBuf bytes.Buffer
+	var ftypBuf, metaBuf, moovBuf, mdatBuf bytes.Buffer
 	if err := writeBox(&ftypBuf, ct.Ftyp); err != nil {
 		return 0, err
 	}
@@ -306,20 +311,30 @@ func (ct *Container) WriteTo(w io.Writer) (int64, error) {
 			return 0, err
 		}
 	}
-	if ct.Mdat != nil {
-		if err := writeBox(&mdatBuf, ct.Mdat); err != nil {
+	if ct.Moov != nil {
+		if err := writeBox(&moovBuf, ct.Moov); err != nil {
+			return 0, err
+		}
+	}
+	for _, reg := range mdatRegions {
+		if err := writeBox(&mdatBuf, &Mdat{Data: reg.Data}); err != nil {
 			return 0, err
 		}
 	}
 
-	// Compute the mdat payload offset in the output.
-	headerLenOfMdat := headerLen(uint64(len(ct.Mdat.Data)), TypeMdat)
-	mdatHeaderOff := uint64(ftypBuf.Len()) + uint64(extrasBuf.Len()) + uint64(metaBuf.Len())
+	if len(mdatRegions) == 0 {
+		return ct.writeContainerParts(w, ftypBuf.Bytes(), extrasBuf.Bytes(), metaBuf.Bytes(), moovBuf.Bytes(), nil)
+	}
+
+	// Compute the first mdat payload offset in the output (for iloc patching).
+	firstPayloadLen := uint64(len(mdatRegions[0].Data))
+	headerLenOfMdat := headerLen(firstPayloadLen, TypeMdat)
+	mdatHeaderOff := uint64(ftypBuf.Len()) + uint64(extrasBuf.Len()) + uint64(metaBuf.Len()) + uint64(moovBuf.Len())
 	mdatPayloadOff := mdatHeaderOff + headerLenOfMdat
 
 	// Patch iloc offsets in the serialized meta if they were placeholders
 	// referencing ct.MdatOffset. We re-marshal meta after updating offsets.
-	if ct.Mdat != nil && ct.Meta != nil {
+	if len(mdatRegions) == 1 && ct.Meta != nil {
 		if err := patchIlocOffsetsInMeta(ct.Meta, mdatPayloadOff); err != nil {
 			return 0, err
 		}
@@ -330,15 +345,19 @@ func (ct *Container) WriteTo(w io.Writer) (int64, error) {
 		// Size must match the pre-compute; an iloc width increase would
 		// change meta size and shift mdat. AutoSize should have been called
 		// before WriteTo if offsets need to fit; bail if not.
-		newMdatHeaderOff := uint64(ftypBuf.Len()) + uint64(extrasBuf.Len()) + uint64(metaBuf.Len())
+		newMdatHeaderOff := uint64(ftypBuf.Len()) + uint64(extrasBuf.Len()) + uint64(metaBuf.Len()) + uint64(moovBuf.Len())
 		if newMdatHeaderOff != mdatHeaderOff {
 			return 0, fmt.Errorf("%w: iloc patch changed meta size (widths insufficient?)", ErrInvalid)
 		}
 	}
-	// Reflect the final mdat offset on the container for callers that write
+	// Reflect the final first-mdat offset on the container for callers that write
 	// and then re-read their own output.
 	ct.MdatOffset = mdatPayloadOff
 
+	return ct.writeContainerParts(w, ftypBuf.Bytes(), extrasBuf.Bytes(), metaBuf.Bytes(), moovBuf.Bytes(), mdatBuf.Bytes())
+}
+
+func (ct *Container) writeContainerParts(w io.Writer, ftyp, extras, meta, moov, mdat []byte) (int64, error) {
 	var n int64
 	write := func(buf []byte) error {
 		if len(buf) == 0 {
@@ -348,16 +367,19 @@ func (ct *Container) WriteTo(w io.Writer) (int64, error) {
 		n += int64(k)
 		return err
 	}
-	if err := write(ftypBuf.Bytes()); err != nil {
+	if err := write(ftyp); err != nil {
 		return n, err
 	}
-	if err := write(extrasBuf.Bytes()); err != nil {
+	if err := write(extras); err != nil {
 		return n, err
 	}
-	if err := write(metaBuf.Bytes()); err != nil {
+	if err := write(meta); err != nil {
 		return n, err
 	}
-	if err := write(mdatBuf.Bytes()); err != nil {
+	if err := write(moov); err != nil {
+		return n, err
+	}
+	if err := write(mdat); err != nil {
 		return n, err
 	}
 	return n, nil

@@ -62,12 +62,13 @@ func ParseMP4(data []byte) (MP4Track, error) {
 		if s.Size == 0 {
 			return MP4Track{}, fmt.Errorf("container: sample %d empty", i)
 		}
-		end, err := checkedSampleEnd(s.Offset, uint64(s.Size))
+		if _, err := checkedSampleEnd(s.Offset, uint64(s.Size)); err != nil {
+			return MP4Track{}, fmt.Errorf("container: sample %d: %w", i, err)
+		}
+		chunk, err := ct.ReadPayloadAt(s.Offset, uint64(s.Size))
 		if err != nil {
 			return MP4Track{}, fmt.Errorf("container: sample %d: %w", i, err)
 		}
-		_ = end
-		chunk, err := ct.ReadPayloadAt(s.Offset, uint64(s.Size))
 		out.Samples = append(out.Samples, MP4Sample{
 			Index:  i,
 			Offset: s.Offset,
