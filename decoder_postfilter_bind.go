@@ -432,6 +432,9 @@ type DecoderFrameWorkReusableSupportedPostFilterRunner struct {
 	// RestorationOptimized selects the optimized loop-restoration apply path.
 	RestorationOptimized bool
 
+	// SkipFilmGrain marks film grain complete without synthesizing noise.
+	SkipFilmGrain bool
+
 	// Parallel, when non-nil with more than one worker, fans the supported
 	// post-filter chain's independent row bands out across goroutines. Set it
 	// once (e.g. from the decoder worker count); it is reused across frames and
@@ -459,6 +462,9 @@ type DecoderFrameWorkReusableCallerPostFilterRunner struct {
 func (r *DecoderFrameWorkReusableSupportedPostFilterRunner) Apply(ctx DecoderFrameWorkPostFilterContext) error {
 	if r == nil {
 		return ErrDecoderInvalidFrameWorkState
+	}
+	if r.SkipFilmGrain && ctx.RemainingPostFilters().Has(DecoderFrameWorkPostFilterFilmGrain) {
+		ctx = ctx.WithCompletedPostFilters(DecoderFrameWorkPostFilterFilmGrain)
 	}
 	r.runner.RestorationOptimized = r.RestorationOptimized
 	r.runner.Parallel = r.Parallel
