@@ -233,12 +233,28 @@ func trakMediaTimescale(trak *Trak) (uint32, bool) {
 type Mdhd struct {
 	FullBoxHeader
 	Timescale uint32
+	Duration  uint32
+	Language  uint16 // ISO-639-2/T packed per §8.4.2
 }
 
 func (*Mdhd) BoxType() FourCC { return TypeMdhd }
 
 func (m *Mdhd) MarshalPayload() ([]byte, error) {
-	return nil, fmt.Errorf("%w: mdhd marshal not implemented", ErrInvalid)
+	b := newBuilder()
+	fbh := m.FullBoxHeader
+	fbh.Version = 0
+	b.buf = appendFullBoxHeader(b.buf, fbh)
+	b.writeU32(0) // creation_time
+	b.writeU32(0) // modification_time
+	b.writeU32(m.Timescale)
+	b.writeU32(m.Duration)
+	lang := m.Language
+	if lang == 0 {
+		lang = 0x55C4 // und
+	}
+	b.writeU16(lang)
+	b.writeU16(0) // pre_defined
+	return b.bytes(), nil
 }
 
 func ParseMdhd(payload []byte) (*Mdhd, error) {
@@ -252,13 +268,15 @@ func ParseMdhd(payload []byte) (*Mdhd, error) {
 		_ = c.readU64() // creation
 		_ = c.readU64() // modification
 		m.Timescale = c.readU32()
-		_ = c.readU64() // duration
+		m.Duration = uint32(c.readU64())
 	} else {
 		_ = c.readU32()
 		_ = c.readU32()
 		m.Timescale = c.readU32()
-		_ = c.readU32()
+		m.Duration = c.readU32()
 	}
+	m.Language = c.readU16()
+	_ = c.readU16()
 	if c.err != nil {
 		return nil, c.err
 	}

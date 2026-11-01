@@ -326,33 +326,38 @@ func (ct *Container) WriteTo(w io.Writer) (int64, error) {
 		return ct.writeContainerParts(w, ftypBuf.Bytes(), extrasBuf.Bytes(), metaBuf.Bytes(), moovBuf.Bytes(), nil)
 	}
 
-	// Compute the first mdat payload offset in the output (for iloc patching).
-	firstPayloadLen := uint64(len(mdatRegions[0].Data))
-	headerLenOfMdat := headerLen(firstPayloadLen, TypeMdat)
-	mdatHeaderOff := uint64(ftypBuf.Len()) + uint64(extrasBuf.Len()) + uint64(metaBuf.Len()) + uint64(moovBuf.Len())
-	mdatPayloadOff := mdatHeaderOff + headerLenOfMdat
+	prefixLen := uint64(ftypBuf.Len() + extrasBuf.Len() + metaBuf.Len() + moovBuf.Len())
+	newStarts := planMdatPayloadStarts(mdatRegions, prefixLen)
+	plan := newMdatRegionPlan(mdatRegions, mdatRegions, newStarts)
 
-	// Patch iloc offsets in the serialized meta if they were placeholders
-	// referencing ct.MdatOffset. We re-marshal meta after updating offsets.
-	if len(mdatRegions) == 1 && ct.Meta != nil {
-		if err := patchIlocOffsetsInMeta(ct.Meta, mdatPayloadOff); err != nil {
+	ilocAbsolute := ilocUsesAbsoluteFileOffsets(ct.Meta, mdatRegions)
+	if ct.Meta != nil {
+		if err := remapIlocFileOffsets(ct.Meta, plan, ilocAbsolute); err != nil {
 			return 0, err
 		}
 		metaBuf.Reset()
 		if err := writeBox(&metaBuf, ct.Meta); err != nil {
 			return 0, err
 		}
-		// Size must match the pre-compute; an iloc width increase would
-		// change meta size and shift mdat. AutoSize should have been called
-		// before WriteTo if offsets need to fit; bail if not.
-		newMdatHeaderOff := uint64(ftypBuf.Len()) + uint64(extrasBuf.Len()) + uint64(metaBuf.Len()) + uint64(moovBuf.Len())
-		if newMdatHeaderOff != mdatHeaderOff {
-			return 0, fmt.Errorf("%w: iloc patch changed meta size (widths insufficient?)", ErrInvalid)
+	}
+	if ct.Moov != nil {
+		if err := remapMoovChunkOffsets(ct.Moov, plan); err != nil {
+			return 0, err
+		}
+		moovBuf.Reset()
+		if err := writeBox(&moovBuf, ct.Moov); err != nil {
+			return 0, err
 		}
 	}
-	// Reflect the final first-mdat offset on the container for callers that write
-	// and then re-read their own output.
-	ct.MdatOffset = mdatPayloadOff
+
+	// Layout is stable only when meta/moov sizes did not change during remap.
+	newPrefixLen := uint64(ftypBuf.Len() + extrasBuf.Len() + metaBuf.Len() + moovBuf.Len())
+	if newPrefixLen != prefixLen {
+		return 0, fmt.Errorf("%w: iloc/moov remap changed box sizes (widths insufficient?)", ErrInvalid)
+	}
+
+	ct.MdatOffset = newStarts[0]
+	refreshMdatRegionsAfterWrite(ct, mdatRegions, newStarts)
 
 	return ct.writeContainerParts(w, ftypBuf.Bytes(), extrasBuf.Bytes(), metaBuf.Bytes(), moovBuf.Bytes(), mdatBuf.Bytes())
 }
