@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 )
 
 // coeffInitLevelsArch is the Go SIMD slice of SVT-AV1's

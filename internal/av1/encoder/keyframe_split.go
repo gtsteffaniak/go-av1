@@ -21,11 +21,11 @@ package encoder
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/loopfilter"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/prediction"
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/prediction"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // keyTrialAll marks the whole trial context set dirty (the generic trial

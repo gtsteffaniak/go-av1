@@ -1,8 +1,8 @@
 package goav1
 
 import (
-	internalbitstream "github.com/thesyncim/goav1/internal/av1/bitstream"
-	internalencoder "github.com/thesyncim/goav1/internal/av1/encoder"
+	internalbitstream "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	internalencoder "github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 const (

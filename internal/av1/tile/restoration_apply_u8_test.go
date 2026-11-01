@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	av1frame "github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	av1frame "github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // TestApplyRestorationFrameToFrameU8MatchesWidePath is the direct old-vs-new

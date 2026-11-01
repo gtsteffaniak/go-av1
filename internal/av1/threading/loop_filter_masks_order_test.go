@@ -3,8 +3,8 @@ package threading
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/lfmask"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/lfmask"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // loop_filter_masks_order_test.go pins the neighbour-derived BuildFromMap

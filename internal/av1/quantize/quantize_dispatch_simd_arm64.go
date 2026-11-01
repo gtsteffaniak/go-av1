@@ -2,7 +2,7 @@
 
 package quantize
 
-import "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+import "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 
 // init binds Go-native SIMD quantizers under GOEXPERIMENT=simd.
 func init() {

@@ -6,7 +6,7 @@
 
 package dsp
 
-import "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+import "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 
 // init binds the Go-native SIMD BlendA64Mask inner loop on arm64 SIMD builds.
 // NEON is mandatory on every arm64 target Go supports; the pure-Go reference is

@@ -8,8 +8,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 func TestFrameWorkPaletteFillMatchesPerSampleStore(t *testing.T) {

@@ -7,8 +7,8 @@
 package loopfilter
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 // DeltaState is the block-local delta-lf state carried by tile decode.

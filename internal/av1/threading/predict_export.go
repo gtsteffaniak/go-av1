@@ -1,9 +1,9 @@
 package threading
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/prediction"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/prediction"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // predict_export.go exposes the frame-work intra edge construction to the

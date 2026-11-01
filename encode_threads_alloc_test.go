@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
+	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 // TestVideoEncoderThreadsSteadyStateZeroAlloc pins the zero-allocation design

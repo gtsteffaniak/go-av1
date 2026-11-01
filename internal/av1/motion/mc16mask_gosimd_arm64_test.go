@@ -12,7 +12,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // mc16TestConvBufs fills two CONV_BUFs per mode: 0 the realistic CONV_BUF

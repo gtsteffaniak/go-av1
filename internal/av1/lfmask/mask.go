@@ -19,7 +19,7 @@ package lfmask
 import (
 	"encoding/binary"
 
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // FilterMask holds the dav1d Av1Filter edge bitmasks for one 128x128 region

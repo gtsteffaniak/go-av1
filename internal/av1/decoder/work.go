@@ -3,12 +3,12 @@ package decoder
 import (
 	"errors"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/lfmask"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/threading"
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	decodework "github.com/thesyncim/goav1/internal/av1/work"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/lfmask"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	decodework "github.com/gtsteffaniak/go-av1/internal/av1/work"
 )
 
 var ErrInvalidTileWork = errors.New("decoder: invalid tile work")

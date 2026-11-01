@@ -31,10 +31,10 @@ package encoder
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // lpd1TxCtrls mirrors the consumed subset of SVT-AV1's Lpd1TxCtrls

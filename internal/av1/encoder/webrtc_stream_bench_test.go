@@ -3,7 +3,7 @@ package encoder_test
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 var webRTCStreamBenchmarkSink int

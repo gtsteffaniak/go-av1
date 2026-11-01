@@ -3,8 +3,8 @@ package tile
 import (
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // coefBlock is the per-block binding dav1d's recon_b_intra/recon_b_inter and

@@ -3,7 +3,7 @@ package tile
 import (
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 )
 
 // palette_write.go is the encoder side of palette_mode_info and

@@ -7,7 +7,7 @@ import (
 	"io"
 	"time"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 // decoder owns the public high-level decoder used by the CLI. The high-level

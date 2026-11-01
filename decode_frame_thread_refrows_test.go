@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // poisonRowsTailHook makes every finished frame-threaded surface final one

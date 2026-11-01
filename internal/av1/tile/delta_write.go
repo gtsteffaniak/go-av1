@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/entropy"
+import "github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 
 // WriteSignedDelta codes one delta_qindex / delta_lf value, the forward of
 // entropy.Reader.ReadSignedDelta and the port of libaom's write_delta_qindex

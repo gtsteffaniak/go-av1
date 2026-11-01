@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/parser"
+import "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 var planeBlockSizeLookup = [blockSizeCount][2][2]BlockSize{
 	BlockSize128x128: {{BlockSize128x128, BlockSize128x64}, {BlockSize64x128, BlockSize64x64}},

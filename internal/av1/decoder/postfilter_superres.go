@@ -3,8 +3,8 @@ package decoder
 import (
 	"fmt"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/superres"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/superres"
 )
 
 // FrameWorkSuperResPostFilterPlanePlan describes one plane's coded and

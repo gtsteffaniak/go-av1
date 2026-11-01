@@ -3,7 +3,7 @@ package decoder
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 func TestCDEFPrimaryDirectionGateUsesRawStrengths(t *testing.T) {

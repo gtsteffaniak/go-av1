@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"unsafe"
 
-	internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
+	internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // Decoder is an ergonomic, high-level wrapper around the byte-exact public
@@ -110,6 +110,7 @@ const (
 type decoderConfig struct {
 	workers       int
 	maxFrameDelay int
+	skipFilmGrain bool
 }
 
 // Option configures a Decoder at construction time.
@@ -125,6 +126,12 @@ type Option func(*decoderConfig)
 // call).
 func WithWorkers(n int) Option {
 	return func(c *decoderConfig) { c.workers = n }
+}
+
+// WithSkipFilmGrain disables film-grain synthesis on decoded output. Thumbnail
+// and still-image callers typically enable this.
+func WithSkipFilmGrain() Option {
+	return func(c *decoderConfig) { c.skipFilmGrain = true }
 }
 
 func resolveConfig(opts []Option) decoderConfig {
@@ -354,6 +361,8 @@ func newDecoderFromPayloadSourceKind(source decoderPayloadSource, kind decoderPa
 	// previous stage's complete output via boundary snapshots and writes disjoint
 	// rows), so it never alters decoded output.
 	d.postFilterParallel.Workers = d.workerPool.WorkerCount()
+	d.postFilter.SkipFilmGrain = cfg.skipFilmGrain
+	d.external.supported.SkipFilmGrain = cfg.skipFilmGrain
 	d.postFilter.Parallel = &d.postFilterParallel
 	d.external.supported.Parallel = &d.postFilterParallel
 

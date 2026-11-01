@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 )
 
 // buildLowOverhead emits one or more OBUs back-to-back with obu_size present.

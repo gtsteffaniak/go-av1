@@ -3,11 +3,11 @@ package threading
 import (
 	"sync"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	decodework "github.com/thesyncim/goav1/internal/av1/work"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	decodework "github.com/gtsteffaniak/go-av1/internal/av1/work"
 )
 
 // BatchFunc processes one deterministic batch. The jobs slice is the exact

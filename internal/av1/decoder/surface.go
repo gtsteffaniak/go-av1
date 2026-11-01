@@ -1,6 +1,6 @@
 package decoder
 
-import "github.com/thesyncim/goav1/internal/av1/parser"
+import "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 // SurfaceReferences maps AV1 reference slots to caller-owned frame-pool slots.
 //

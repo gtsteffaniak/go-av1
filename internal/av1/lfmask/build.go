@@ -1,6 +1,6 @@
 package lfmask
 
-import "github.com/thesyncim/goav1/internal/av1/tile"
+import "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // Builder owns the per-block transform-decomposition scratch so the mask-edge
 // build carries zero heap allocations across the decode block walk. One Builder

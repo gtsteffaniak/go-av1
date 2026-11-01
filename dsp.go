@@ -1,6 +1,6 @@
 package goav1
 
-import internaldsp "github.com/thesyncim/goav1/internal/av1/dsp"
+import internaldsp "github.com/gtsteffaniak/go-av1/internal/av1/dsp"
 
 // ErrDSPInvalidBlock is returned by DSP helpers when block geometry or buffer
 // dimensions are inconsistent with the requested operation.

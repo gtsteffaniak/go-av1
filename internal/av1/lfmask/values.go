@@ -1,6 +1,6 @@
 package lfmask
 
-import "github.com/thesyncim/goav1/internal/av1/parser"
+import "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 // LFValues is dav1d's per-frame (or per-superblock, under delta_lf) loop-filter
 // level table, f->lf.lvl / ts->lflvlmem: values[seg][dir][ref][mode] where dir

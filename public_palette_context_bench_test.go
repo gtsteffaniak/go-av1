@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 // The sidecars copy the independent libaom aomdec per-frame MD5s already

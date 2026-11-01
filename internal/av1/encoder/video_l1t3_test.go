@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	"github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 // TestVideoEncoderL1T3LayerDrops proves the three-layer temporal structure:

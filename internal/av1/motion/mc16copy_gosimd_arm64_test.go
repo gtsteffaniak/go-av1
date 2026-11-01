@@ -12,7 +12,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 func TestMC16CopyFastMatchesClampedCopy(t *testing.T) {

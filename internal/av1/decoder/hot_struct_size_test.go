@@ -4,7 +4,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 const hotStructKiB = 1024

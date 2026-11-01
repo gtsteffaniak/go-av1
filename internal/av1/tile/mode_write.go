@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/entropy"
+import "github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 
 // mode_write.go holds the forwards of the block mode-symbol readers needed to
 // assemble an intra keyframe: skip_transform, luma intra mode, intra angle

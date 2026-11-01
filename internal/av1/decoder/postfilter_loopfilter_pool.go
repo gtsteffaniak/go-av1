@@ -3,9 +3,9 @@ package decoder
 import (
 	"sync/atomic"
 
-	"github.com/thesyncim/goav1/internal/av1/lfmask"
-	"github.com/thesyncim/goav1/internal/av1/loopfilter"
-	"github.com/thesyncim/goav1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/lfmask"
+	"github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // lfMaskMinRegionRowsPerBand is the minimum number of 128x128 mask region-rows a

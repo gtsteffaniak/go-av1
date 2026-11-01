@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 func TestFilter6EdgeHorizontalFlat8Bit(t *testing.T) {

@@ -5,9 +5,9 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/obu"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	internalrtp "github.com/thesyncim/goav1/internal/av1/rtp"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	internalrtp "github.com/gtsteffaniak/go-av1/internal/av1/rtp"
 )
 
 func TestWebRTCStreamEncoderOptions(t *testing.T) {

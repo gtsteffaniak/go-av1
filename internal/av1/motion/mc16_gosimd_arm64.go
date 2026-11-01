@@ -10,7 +10,7 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // dav1d-style 16bpc compound prep (src/mc_tmpl.c prep_8tap, src/arm/64/mc16.S

@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/quantize"
+import "github.com/gtsteffaniak/go-av1/internal/av1/quantize"
 
 // cyclic_refresh.go ports SVT-AV1's realtime CBR cyclic refresh
 // (Source/Lib/Codec/rc_aq.c svt_aom_cyclic_refresh_init and

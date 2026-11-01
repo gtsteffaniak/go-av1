@@ -5,10 +5,10 @@
 package reconstruct
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/dsp"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/quantize"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/quantize"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // Block describes the residual transform block to reconstruct.

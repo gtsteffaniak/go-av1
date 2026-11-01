@@ -23,11 +23,11 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	av1restoration "github.com/thesyncim/goav1/internal/av1/restoration"
-	"github.com/thesyncim/goav1/internal/av1/threading"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	av1restoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 const (

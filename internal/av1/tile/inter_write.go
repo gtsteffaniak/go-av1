@@ -1,8 +1,8 @@
 package tile
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // inter_write.go holds the forwards of the inter mode-symbol readers needed

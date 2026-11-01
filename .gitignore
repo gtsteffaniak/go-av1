@@ -8,7 +8,11 @@ coverage.out
 *.pprof
 *.tmp
 third_party/upstream/
-internal/av1/testdata/libaom/
+# libaom/dav1d/argon caches — a minimal committed IVF set is whitelisted below.
+internal/av1/testdata/libaom/*
+!internal/av1/testdata/libaom/README.md
+!internal/av1/testdata/libaom/*.ivf
+!internal/av1/testdata/libaom/*.md5
 internal/av1/testdata/dav1d/
 internal/av1/testdata/argon/
 

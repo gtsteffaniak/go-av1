@@ -3,7 +3,7 @@ package goav1_test
 import (
 	"fmt"
 
-	goav1 "github.com/thesyncim/goav1"
+	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 // ExampleVideoEncoder encodes a short fixed-quality stream and decodes it

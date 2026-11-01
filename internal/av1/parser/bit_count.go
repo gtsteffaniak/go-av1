@@ -1,6 +1,6 @@
 package parser
 
-import "github.com/thesyncim/goav1/internal/av1/bitstream"
+import "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 
 func readerBitsRead(r *bitstream.Reader) (uint16, error) {
 	bits := r.BitsRead()

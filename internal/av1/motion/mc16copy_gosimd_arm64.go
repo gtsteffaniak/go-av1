@@ -9,7 +9,7 @@ package motion
 import (
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // mc16CopyFast is the 16bpc put copy (dav1d mc16.S put_neon): an in-plane

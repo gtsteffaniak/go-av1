@@ -97,16 +97,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
-	"github.com/thesyncim/goav1/internal/av1/decoder"
-	cpufeatures "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
-	"github.com/thesyncim/goav1/internal/av1/frame"
-	"github.com/thesyncim/goav1/internal/av1/ivf"
-	"github.com/thesyncim/goav1/internal/av1/lfmask"
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	"github.com/thesyncim/goav1/internal/av1/threading"
-	"github.com/thesyncim/goav1/internal/av1/tile"
-	"github.com/thesyncim/goav1/internal/benchenv"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/decoder"
+	cpufeatures "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	"github.com/gtsteffaniak/go-av1/internal/av1/lfmask"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/benchenv"
 )
 
 // corpusClip is one benchmark/corpus clip resolved on disk together with its

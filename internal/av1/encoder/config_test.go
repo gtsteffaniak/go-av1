@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 func TestProfileParseAndString(t *testing.T) {

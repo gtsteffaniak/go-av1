@@ -6,7 +6,7 @@
 
 package prediction
 
-import "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+import "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 
 // init binds the Go-native SIMD intra kernels under the goexperiment.simd build:
 // PAETH and the three SMOOTH predictors (intra_static_gosimd_arm64.go), the DC

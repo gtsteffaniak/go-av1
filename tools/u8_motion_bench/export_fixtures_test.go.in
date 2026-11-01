@@ -12,8 +12,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 const u8MotionBenchSide = 144

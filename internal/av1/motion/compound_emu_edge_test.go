@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // TestCompound8XYClampedEmuEdgeMatchesPureGo drives the 8-bit compound

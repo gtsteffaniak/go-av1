@@ -4,7 +4,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // The convolve kernels below are the hottest part of inter prediction (~14-24%
 // of single-worker decode). Each has a function-pointer dispatch slot that is

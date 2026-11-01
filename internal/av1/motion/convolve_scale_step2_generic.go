@@ -6,7 +6,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 const scaledStep2Half = ScaleSubpelScale / 2
 

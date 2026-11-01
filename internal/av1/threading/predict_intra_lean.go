@@ -5,8 +5,8 @@
 package threading
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/prediction"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/prediction"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // cachedJobRegionPtr is cachedJobRegionTrusted returning the cached region in

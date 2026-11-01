@@ -1,6 +1,6 @@
 package goav1
 
-import internalfilmgrain "github.com/thesyncim/goav1/internal/av1/filmgrain"
+import internalfilmgrain "github.com/gtsteffaniak/go-av1/internal/av1/filmgrain"
 
 // FilmGrainRandom is the AV1 film-grain PRNG state used to seed grain
 // generation for each frame, plane, and stripe.

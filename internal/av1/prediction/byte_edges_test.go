@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // Frozen pre-change pixel walk; do not delegate to the optimized range helper.

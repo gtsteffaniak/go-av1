@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/cdef"
+	"github.com/gtsteffaniak/go-av1/internal/av1/cdef"
 )
 
 // TestCDEFDist8MatchesScalar: the dispatched cdefDist8 equals the scalar

@@ -3,7 +3,7 @@
 // wasm encoder share it, so both encode identical frames.
 package pattern
 
-import goav1 "github.com/thesyncim/goav1"
+import goav1 "github.com/gtsteffaniak/go-av1"
 
 // Fill writes frame t of the scene into f: a XOR texture panning with t, a
 // bright disc sweeping across the middle, and slowly shifting chroma ramps.

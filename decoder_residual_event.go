@@ -3,8 +3,8 @@ package goav1
 import (
 	"fmt"
 
-	internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
+	internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 // DecoderFrameWorkResidualEventRequest carries caller-owned state for running

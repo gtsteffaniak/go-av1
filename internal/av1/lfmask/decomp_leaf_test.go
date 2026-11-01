@@ -7,7 +7,7 @@ package lfmask
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // decompTxLeafRef is the per-byte leaf fill decompTxLeaf replaces.

@@ -1,6 +1,6 @@
 package threading
 
-import "github.com/thesyncim/goav1/internal/av1/tile"
+import "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 
 // FrameWorkRestorationFrameBuffers binds the caller-owned loop-restoration
 // record and stripe-boundary storage for one frame.

@@ -32,8 +32,8 @@ package goav1
 //     ties the residual pipeline to the worker pool.
 
 import (
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
-	internaltile "github.com/thesyncim/goav1/internal/av1/tile"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
+	internaltile "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // DecoderFrameWorkResidualScratchLen reports the int32 and int16 residual

@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/benchenv"
+	"github.com/gtsteffaniak/go-av1/internal/benchenv"
 )
 
 func TestValidatePublishConfigRequiresStrictControls(t *testing.T) {

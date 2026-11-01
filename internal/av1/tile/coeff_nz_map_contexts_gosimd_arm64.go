@@ -9,7 +9,7 @@ package tile
 import (
 	"simd/archsimd"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 )
 
 // coeffNZMapSIMDAvailable gates the NEON Go SIMD nz-map pass.

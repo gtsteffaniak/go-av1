@@ -7,7 +7,7 @@
 package motion
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // init binds the high-bit-depth convolves to the Go SIMD kernels. The clamped

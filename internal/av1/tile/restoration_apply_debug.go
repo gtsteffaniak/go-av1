@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	av1restoration "github.com/thesyncim/goav1/internal/av1/restoration"
+	av1restoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
 )
 
 var wienerDebugCount int

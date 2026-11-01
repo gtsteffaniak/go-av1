@@ -12,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	av1 "github.com/thesyncim/goav1"
+	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 const (

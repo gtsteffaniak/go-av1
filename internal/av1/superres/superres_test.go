@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 func TestUpscalePlaneMatchesNormativeRows(t *testing.T) {

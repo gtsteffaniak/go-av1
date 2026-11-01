@@ -3,8 +3,8 @@ package tile
 import (
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // coeff_write.go is the forward of ReadCoefficientsTXB: it codes one transform

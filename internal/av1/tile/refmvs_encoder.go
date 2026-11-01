@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/motion"
+import "github.com/gtsteffaniak/go-av1/internal/av1/motion"
 
 // Encoder access to the dav1d refmvs rows. An encoder's block loop keeps the
 // same tile-cached refmvs_block rows the decoder does: WalkBlockLoopWrite and

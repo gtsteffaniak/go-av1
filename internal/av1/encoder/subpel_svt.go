@@ -3,7 +3,7 @@ package encoder
 import (
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/motion"
+	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 )
 
 // subpel_svt.go is SVT-AV1's MD sub-pel refinement of the ME motion vector,

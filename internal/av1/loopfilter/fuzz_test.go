@@ -3,7 +3,7 @@ package loopfilter
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 func FuzzResolveLevel(f *testing.F) {

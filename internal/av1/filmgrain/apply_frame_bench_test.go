@@ -8,7 +8,7 @@ import (
 	"math/rand"
 	"testing"
 
-	fg "github.com/thesyncim/goav1/internal/av1/filmgrain"
+	fg "github.com/gtsteffaniak/go-av1/internal/av1/filmgrain"
 )
 
 // benchApplyFrame applies film grain to every 32-line luma band (and the

@@ -1,8 +1,10 @@
 package encoder
 
 import (
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
-	"github.com/thesyncim/goav1/internal/av1/obu"
+	"errors"
+
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 // OBU describes one encoder-emitted low-overhead OBU. Payload aliases caller
@@ -367,45 +369,71 @@ func lowOverheadWebRTCScalabilityMetadataOBUSizeForConfig(mode ScalabilityMode, 
 // LowOverheadTemporalUnitSize returns the exact number of bytes required to emit
 // a low-overhead temporal unit: one temporal-delimiter OBU followed by obus.
 func LowOverheadTemporalUnitSize(obus []OBU) (int, error) {
-	if len(obus) == 0 {
-		return 0, ErrInvalidFrame
-	}
-	size := lowOverheadOBUSizeUnchecked(OBU{Type: obu.TypeTemporalDelimiter})
-	for i := range obus {
-		unit := obus[i]
-		if unit.Type == obu.TypeTemporalDelimiter {
-			return 0, ErrInvalidFrame
-		}
-		if err := validateOBU(unit); err != nil {
+	if len(obus) <= maxStackTemporalUnitOBUs {
+		var stack [maxStackTemporalUnitOBUs]obu.Unit
+		units := stack[:len(obus)]
+		if err := fillObuUnits(units, obus); err != nil {
 			return 0, err
 		}
-		size += lowOverheadOBUSizeUnchecked(unit)
+		n, err := obu.LowOverheadTemporalUnitSize(units)
+		return n, mapOBUTemporalUnitErr(err)
 	}
-	return size, nil
+	units := make([]obu.Unit, len(obus))
+	if err := fillObuUnits(units, obus); err != nil {
+		return 0, err
+	}
+	n, err := obu.LowOverheadTemporalUnitSize(units)
+	return n, mapOBUTemporalUnitErr(err)
 }
 
 // AppendLowOverheadTemporalUnit appends one temporal-delimiter OBU followed by
 // obus. The function never grows dst and validates the full unit before writing,
 // so errors leave dst length unchanged.
 func AppendLowOverheadTemporalUnit(dst []byte, obus []OBU) ([]byte, error) {
-	size, err := LowOverheadTemporalUnitSize(obus)
-	if err != nil {
-		return dst, err
-	}
-	if cap(dst)-len(dst) < size {
-		return dst, bitstream.ErrShortBuffer
-	}
-	out, err := AppendLowOverheadOBU(dst, OBU{Type: obu.TypeTemporalDelimiter})
-	if err != nil {
-		return dst, err
-	}
-	for i := range obus {
-		out, err = AppendLowOverheadOBU(out, obus[i])
-		if err != nil {
+	if len(obus) <= maxStackTemporalUnitOBUs {
+		var stack [maxStackTemporalUnitOBUs]obu.Unit
+		units := stack[:len(obus)]
+		if err := fillObuUnits(units, obus); err != nil {
 			return dst, err
 		}
+		out, err := obu.AppendLowOverheadTemporalUnit(dst, units)
+		return out, mapOBUTemporalUnitErr(err)
 	}
-	return out, nil
+	units := make([]obu.Unit, len(obus))
+	if err := fillObuUnits(units, obus); err != nil {
+		return dst, err
+	}
+	out, err := obu.AppendLowOverheadTemporalUnit(dst, units)
+	return out, mapOBUTemporalUnitErr(err)
+}
+
+const maxStackTemporalUnitOBUs = 32
+
+func fillObuUnits(units []obu.Unit, obus []OBU) error {
+	for i := range obus {
+		if err := validateOBU(obus[i]); err != nil {
+			return err
+		}
+		units[i] = obu.Unit{
+			Header: obu.Header{
+				Type:       obus[i].Type,
+				TemporalID: obus[i].TemporalID,
+				SpatialID:  obus[i].SpatialID,
+			},
+			Payload: obus[i].Payload,
+		}
+	}
+	return nil
+}
+
+func mapOBUTemporalUnitErr(err error) error {
+	if err == nil {
+		return nil
+	}
+	if errors.Is(err, obu.ErrInvalidTemporalUnit) || errors.Is(err, obu.ErrInvalidType) {
+		return ErrInvalidFrame
+	}
+	return err
 }
 
 func validateOBU(unit OBU) error {

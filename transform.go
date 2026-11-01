@@ -1,6 +1,6 @@
 package goav1
 
-import internaltransform "github.com/thesyncim/goav1/internal/av1/transform"
+import internaltransform "github.com/gtsteffaniak/go-av1/internal/av1/transform"
 
 // TransformSize is a {Width, Height} pair describing a transform block's
 // dimensions in samples.

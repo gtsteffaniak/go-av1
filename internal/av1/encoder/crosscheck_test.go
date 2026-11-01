@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/encoder"
-	"github.com/thesyncim/goav1/internal/av1/ivf"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
 )
 
 // TestEncodedStreamDecodesInReferenceDecoders is the independent oracle: the

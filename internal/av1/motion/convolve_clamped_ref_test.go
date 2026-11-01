@@ -3,7 +3,7 @@ package motion
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // This file pins the per-tap-clamping pure-Go convolve reference (the spec

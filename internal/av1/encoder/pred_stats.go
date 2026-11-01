@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/thesyncim/goav1/internal/av1/motion"
+import "github.com/gtsteffaniak/go-av1/internal/av1/motion"
 
 // pred_stats.go lets the inter block's luma prediction statistics travel
 // between the stages that compute them. The MDS0 candidate loop, the

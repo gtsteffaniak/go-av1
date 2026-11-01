@@ -4,7 +4,7 @@ import (
 	"crypto/md5"
 	"hash"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // FrameMD5 returns the decoded-frame digest layout used by libaom

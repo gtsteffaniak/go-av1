@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 // TestWebRTCStreamL1T2Metadata is the scalable-packaging gate: an L1T2 WebRTC

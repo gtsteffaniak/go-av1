@@ -1,6 +1,6 @@
 package goav1
 
-import internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
+import internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
 
 // DecoderTileListEntryDecodePlan is the residual-runner contract for decoding
 // one tile_list_obu() entry. Event is a synthetic tile-group event whose payload

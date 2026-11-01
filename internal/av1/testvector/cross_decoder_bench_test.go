@@ -84,8 +84,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/thesyncim/goav1/internal/av1/ivf"
-	"github.com/thesyncim/goav1/internal/benchenv"
+	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	"github.com/gtsteffaniak/go-av1/internal/benchenv"
 )
 
 // crossBenchRuns is the measured sample count (N>=7 per the methodology). The

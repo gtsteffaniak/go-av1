@@ -11,8 +11,8 @@ import (
 	"simd/archsimd"
 	"unsafe"
 
-	"github.com/thesyncim/goav1/internal/av1/dsp/cpu"
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // Go-native SIMD 8-bit warped-motion kernels. The horizontal pass multiplies

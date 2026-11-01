@@ -20,7 +20,7 @@ import (
 	"strconv"
 	"time"
 
-	goav1 "github.com/thesyncim/goav1"
+	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 const (

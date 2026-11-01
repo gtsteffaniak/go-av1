@@ -13,7 +13,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // The AVX2 differential tests mirror mc8_gosimd_arm64_test.go. They fail

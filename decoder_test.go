@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	internalthreading "github.com/thesyncim/goav1/internal/av1/threading"
+	internalthreading "github.com/gtsteffaniak/go-av1/internal/av1/threading"
 )
 
 func TestDecoderDecodeNextReusesVisibleSlice(t *testing.T) {

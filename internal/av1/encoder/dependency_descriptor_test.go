@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/bitstream"
+	"github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 )
 
 func TestAppendWebRTCDependencyDescriptorAttachedStructure(t *testing.T) {

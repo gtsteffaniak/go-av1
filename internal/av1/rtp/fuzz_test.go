@@ -3,7 +3,7 @@ package rtp
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/obu"
+	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 )
 
 func FuzzPayloadIterator(f *testing.F) {

@@ -1,6 +1,6 @@
 package goav1
 
-import internaldecoder "github.com/thesyncim/goav1/internal/av1/decoder"
+import internaldecoder "github.com/gtsteffaniak/go-av1/internal/av1/decoder"
 
 // DecoderFrameLayerPool adapts a root FrameLayerPool to the decoder's
 // external-reference provider and releaser interfaces.

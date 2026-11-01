@@ -1,6 +1,6 @@
 package goav1
 
-import internalquantize "github.com/thesyncim/goav1/internal/av1/quantize"
+import internalquantize "github.com/gtsteffaniak/go-av1/internal/av1/quantize"
 
 // QuantizerPlane selects between the luma and chroma quantization parameter
 // sets used by AV1.

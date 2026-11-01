@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // BenchmarkMotion8ABMatrix uses the exported prediction and blend entry points

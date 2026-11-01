@@ -3,7 +3,7 @@ package tile
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/transform"
+	"github.com/gtsteffaniak/go-av1/internal/av1/transform"
 )
 
 // TestUVInterTransformTypeMatchesSetRules checks the dav1d-style chroma rule

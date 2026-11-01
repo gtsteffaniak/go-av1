@@ -7,7 +7,7 @@ package loopfilter
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // TestFilter14EdgeQ32Row7 reproduces the exact 10-bit pre-LF samples at the

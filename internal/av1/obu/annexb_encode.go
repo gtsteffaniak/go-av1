@@ -7,7 +7,7 @@
 
 package obu
 
-import "github.com/thesyncim/goav1/internal/av1/bitstream"
+import "github.com/gtsteffaniak/go-av1/internal/av1/bitstream"
 
 // AppendAnnexBOBU appends a single Annex B size-prefixed OBU element to dst.
 //

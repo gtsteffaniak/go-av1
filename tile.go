@@ -33,9 +33,9 @@ package goav1
 // tile_geometry.go, decoder_prediction.go, decoder_coeff_reconstruct.go).
 
 import (
-	internalloopfilter "github.com/thesyncim/goav1/internal/av1/loopfilter"
-	internalrestoration "github.com/thesyncim/goav1/internal/av1/restoration"
-	internaltile "github.com/thesyncim/goav1/internal/av1/tile"
+	internalloopfilter "github.com/gtsteffaniak/go-av1/internal/av1/loopfilter"
+	internalrestoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
+	internaltile "github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // LoopFilterPlane identifies the luma or chroma plane targeted by a

@@ -6,7 +6,7 @@
 
 package restoration
 
-import "github.com/thesyncim/goav1/internal/av1/dsp/cpu"
+import "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 
 // init binds the Go-native SIMD self-guided kernels on arm64 (NEON is mandatory on
 // every arm64 chip Go runs on). The box sums use boxsumSeparable, which needs no

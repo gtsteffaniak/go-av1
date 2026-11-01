@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/entropy"
+import "github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 
 // partition_write.go is the forward of ReadPartition: it codes one AV1 partition
 // decision into the bitstream. It mirrors ReadPartition exactly, including the

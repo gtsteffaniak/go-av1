@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/transform"
+import "github.com/gtsteffaniak/go-av1/internal/av1/transform"
 
 // skipIntraTXBWalk enumerates one all-zero transform-block visit per luma and
 // chroma transform block of an intra block coded with skip=1.

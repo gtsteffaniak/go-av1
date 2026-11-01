@@ -4,7 +4,7 @@
 
 package motion
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // emuEdgeStride is one row of the emulated-edge scratch window: the widest
 // inter block (128) plus the full 8-tap halo (the horizontal kernels read

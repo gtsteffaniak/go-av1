@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/parser"
+import "github.com/gtsteffaniak/go-av1/internal/av1/parser"
 
 // TransformTreeRequest describes the AV1 transform-size decisions for one
 // decoded block. X4/Y4 are superblock-local 4x4 coordinates.

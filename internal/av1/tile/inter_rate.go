@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/entropy"
+import "github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 
 // inter_rate.go estimates the bit cost of the inter mode-symbol writers, in
 // 512-per-bit units. It is the rate half of SVT-AV1's

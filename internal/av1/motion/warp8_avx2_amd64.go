@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"simd/archsimd"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // AVX2 8-bit warped motion (dav1d src/x86/mc_avx2.asm warp_affine_8x8): the

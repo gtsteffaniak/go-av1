@@ -7,7 +7,7 @@ package prediction
 import (
 	"encoding/binary"
 
-	"github.com/thesyncim/goav1/internal/av1/frame"
+	"github.com/gtsteffaniak/go-av1/internal/av1/frame"
 )
 
 // 8-bit DC / vertical / horizontal stores. Like dav1d's ipred_dc, ipred_v and

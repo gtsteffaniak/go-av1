@@ -7,7 +7,7 @@ package decoder
 import (
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/parser"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
 )
 
 func segMapTestEvent(w, h uint32, primary uint8, refSlot uint8, refresh uint8, seg parser.SegmentationParams) *Event {

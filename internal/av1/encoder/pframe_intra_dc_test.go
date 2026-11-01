@@ -5,9 +5,9 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/thesyncim/goav1"
-	"github.com/thesyncim/goav1/internal/av1/encoder"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	goav1 "github.com/gtsteffaniak/go-av1"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // TestVideoEncoderMDS0IntraDC pins the light-PD1 DC_PRED arm: after a cut

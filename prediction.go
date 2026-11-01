@@ -1,6 +1,6 @@
 package goav1
 
-import internalprediction "github.com/thesyncim/goav1/internal/av1/prediction"
+import internalprediction "github.com/gtsteffaniak/go-av1/internal/av1/prediction"
 
 // PredictionIntraMode identifies one of the AV1 non-directional intra modes
 // (DC, vertical, horizontal, Paeth, smooth, smooth-vertical, smooth-horizontal).

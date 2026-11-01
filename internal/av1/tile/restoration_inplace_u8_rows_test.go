@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/parser"
-	av1restoration "github.com/thesyncim/goav1/internal/av1/restoration"
+	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	av1restoration "github.com/gtsteffaniak/go-av1/internal/av1/restoration"
 )
 
 // TestApplyRestorationFramePlaneInPlaceU8RowsMatchesWholePlane proves the RU-row

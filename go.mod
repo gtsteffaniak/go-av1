@@ -1,3 +1,3 @@
-module github.com/thesyncim/goav1
+module github.com/gtsteffaniak/go-av1
 
 go 1.27.0

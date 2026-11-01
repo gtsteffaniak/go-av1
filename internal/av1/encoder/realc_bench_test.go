@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/thesyncim/goav1/internal/av1/encoder"
+	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 )
 
 // benchCorpus measures steady-state back-to-back encoding of one local corpus

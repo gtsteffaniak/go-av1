@@ -3,8 +3,8 @@ package encoder
 import (
 	"math/bits"
 
-	"github.com/thesyncim/goav1/internal/av1/entropy"
-	"github.com/thesyncim/goav1/internal/av1/tile"
+	"github.com/gtsteffaniak/go-av1/internal/av1/entropy"
+	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
 )
 
 // pframe_vlpd0.go is SVT-AV1's inter-picture partition decision at preset 12

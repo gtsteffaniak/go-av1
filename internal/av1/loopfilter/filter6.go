@@ -6,7 +6,7 @@
 
 package loopfilter
 
-import "github.com/thesyncim/goav1/internal/av1/frame"
+import "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 
 // Filter6Edge applies AV1's six-sample deblocking filter along one horizontal
 // or vertical edge. The x/y coordinate identifies q0, the first sample on the

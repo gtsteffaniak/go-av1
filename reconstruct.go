@@ -1,6 +1,6 @@
 package goav1
 
-import internalreconstruct "github.com/thesyncim/goav1/internal/av1/reconstruct"
+import internalreconstruct "github.com/gtsteffaniak/go-av1/internal/av1/reconstruct"
 
 // ReconstructBlock describes the transform-block geometry, transform type,
 // and lossless flag for one residual reconstruction step. It identifies the

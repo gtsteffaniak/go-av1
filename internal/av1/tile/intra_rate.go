@@ -1,6 +1,6 @@
 package tile
 
-import "github.com/thesyncim/goav1/internal/av1/entropy"
+import "github.com/gtsteffaniak/go-av1/internal/av1/entropy"
 
 // IntraDCRateTables holds the frame-frozen symbol costs, in 512-per-bit
 // units, that SVT-AV1's svt_aom_intra_fast_cost (Source/Lib/Codec/rd_cost.c)
