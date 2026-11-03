@@ -6,9 +6,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestKeyframeDirectionalModes codes striped content as a keyframe: it must
@@ -62,7 +62,7 @@ func TestKeyframeDirectionalModes(t *testing.T) {
 			if psnr < 48 {
 				t.Fatalf("PSNR %.2f below floor", psnr)
 			}
-			dec, err := goav1.NewDecoder([][]byte{tu})
+			dec, err := decode.NewDecoder([][]byte{tu})
 			if err != nil {
 				t.Fatal(err)
 			}

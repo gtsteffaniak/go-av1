@@ -4,10 +4,10 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 	"io"
 	"time"
-
-	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 // decoder owns the public high-level decoder used by the CLI. The high-level
@@ -15,7 +15,7 @@ import (
 // caller-owned postfilter publication path when superres needs a detached
 // upscaled reference surface.
 type decoder struct {
-	dec *av1.Decoder
+	dec *decode.Decoder
 }
 
 func newDecoder(src io.ReaderAt, size int64, workers int, frameDelay int) (*decoder, av1.IVFHeader, error) {
@@ -25,7 +25,7 @@ func newDecoder(src io.ReaderAt, size int64, workers int, frameDelay int) (*deco
 	if frameDelay < 0 {
 		return nil, av1.IVFHeader{}, fmt.Errorf("framedelay must be >= 0, got %d", frameDelay)
 	}
-	dec, header, err := av1.NewDecoderFromIVFReaderAt(src, size, av1.WithWorkers(workers), av1.WithMaxFrameDelay(frameDelay))
+	dec, header, err := decode.NewDecoderFromIVFReaderAt(src, size, decode.WithWorkers(workers), decode.WithMaxFrameDelay(frameDelay))
 	if err != nil {
 		return nil, header, err
 	}

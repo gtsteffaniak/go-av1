@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestEncodeRepeatPFrameDecodesAsReference is the encoder's first inter-frame
@@ -49,7 +49,7 @@ func TestEncodeRepeatPFrameDecodesAsReference(t *testing.T) {
 			}
 			t.Logf("key TU %d bytes, P TU %d bytes", len(keyTU), len(pTU))
 
-			dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+			dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}

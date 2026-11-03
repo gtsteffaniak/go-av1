@@ -55,7 +55,7 @@ func main() {
 
 For a reusable decode loop, use `NewDecoderFromIVF` and `DecodeNext`. Frames
 returned by `DecodeNext` alias decoder-owned memory and remain valid until the
-next decode call. See the executable [decoder examples](example_decode_simple_test.go).
+next decode call. See the executable [decoder examples](pkg/decode/example_decode_simple_test.go).
 
 ## Encode an I420 stream
 
@@ -100,7 +100,7 @@ func main() {
 ~~~
 
 For RTP payloads, dependency descriptors, temporal layers, and WebRTC control,
-see [`RTCEncoder` and the executable encoder examples](example_encode_test.go).
+see [`RTCEncoder` and the executable encoder examples](pkg/encode/example_encode_test.go).
 
 ## Ownership
 
@@ -172,11 +172,12 @@ see [cmd/dump_svc](cmd/dump_svc).
 ## Project references
 
 - [Quality and parity gates](docs/quality-and-parity.md)
+- [Binary size: measurement and build levers](docs/binary-size.md)
 - [Go-native SIMD build and validation](SIMD_PORT.md)
 - [Current end-to-end decoder and encoder gap versus dav1d and SVT-AV1](docs/e2e-codec-gap-20261024.md)
 - [Pinned upstream sources and porting policy](UPSTREAM.md)
-- [Executable public API examples](example_test.go), [decode examples](example_decode_simple_test.go),
-  and [encoder examples](example_encode_test.go)
+- [Executable public API examples](pkg/av1/example_test.go), [decode examples](pkg/decode/example_decode_simple_test.go),
+  and [encoder examples](pkg/encode/example_encode_test.go)
 - [Change history](CHANGELOG.md)
 - [Security policy](SECURITY.md)
 - [Package API documentation](https://pkg.go.dev/github.com/gtsteffaniak/go-av1)

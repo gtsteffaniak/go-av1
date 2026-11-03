@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestLazyNonReferenceCDEFReconMatchesDecode: non-reference pictures (the
@@ -80,7 +80,7 @@ func TestLazyNonReferenceCDEFReconMatchesDecode(t *testing.T) {
 					t.Fatalf("frame %d reconstruction depends on earlier Recon() calls", i)
 				}
 			}
-			dec, err := goav1.NewDecoder(tus)
+			dec, err := decode.NewDecoder(tus)
 			if err != nil {
 				t.Fatal(err)
 			}

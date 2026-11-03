@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderL1T2DroppableLayer is the temporal-scalability gate: under
@@ -85,7 +85,7 @@ func TestVideoEncoderL1T2DroppableLayer(t *testing.T) {
 	}
 
 	decodeAndCompare := func(name string, stream [][]byte, want []encoder.SourceFrame420) {
-		dec, err := goav1.NewDecoder(stream)
+		dec, err := decode.NewDecoder(stream)
 		if err != nil {
 			t.Fatal(err)
 		}

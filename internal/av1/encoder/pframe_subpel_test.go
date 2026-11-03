@@ -8,13 +8,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	avframe "github.com/gtsteffaniak/go-av1/internal/av1/frame"
 	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
 	"github.com/gtsteffaniak/go-av1/internal/av1/motion"
 	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestEncodePFrameSubpelMotion is the subpel gate: the second frame is the
@@ -42,7 +42,7 @@ func TestEncodePFrameSubpelMotion(t *testing.T) {
 		t.Fatalf("P %d bytes not well below key %d: subpel motion not engaged?", len(pTU), len(keyTU))
 	}
 
-	dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+	dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -318,7 +318,7 @@ func parserReferenceStateForFrame(width, height int) parser.ReferenceState {
 
 func decodeTemporalUnits(t *testing.T, payloads ...[]byte) {
 	t.Helper()
-	dec, err := goav1.NewDecoder(payloads)
+	dec, err := decode.NewDecoder(payloads)
 	if err != nil {
 		t.Fatal(err)
 	}

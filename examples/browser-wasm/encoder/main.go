@@ -12,8 +12,8 @@ import (
 	"time"
 	"unsafe"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/examples/browser-wasm/pattern"
+	encode "github.com/gtsteffaniak/go-av1/pkg/encode"
 )
 
 // Pixel formats the worker can hand over; they match VideoFrame.format.
@@ -27,7 +27,7 @@ const (
 )
 
 var (
-	enc       *goav1.VideoEncoder
+	enc       *encode.VideoEncoder
 	width     int
 	height    int
 	frameBuf  []byte // source pixels written by JS
@@ -47,14 +47,14 @@ func avInit(w, h, bitrate, fps, speed int32) int32 {
 		enc.Close()
 		enc = nil
 	}
-	e, err := goav1.NewVideoEncoder(goav1.VideoEncoderConfig{
+	e, err := encode.NewVideoEncoder(encode.VideoEncoderConfig{
 		Width:         int(w),
 		Height:        int(h),
 		TargetBitrate: int(bitrate),
 		Framerate:     int(fps),
 		MaxThreads:    1,
 		Speed:         int8(speed),
-		Content:       goav1.EncoderContentCamera,
+		Content:       encode.EncoderContentCamera,
 	})
 	if err != nil {
 		lastError = err.Error()
@@ -109,25 +109,25 @@ func avErrLen() int32 { return int32(len(lastError)) }
 //go:wasmexport avEncode
 func avEncode(format, forceKey int32) int32 {
 	var (
-		res goav1.EncodedFrame
+		res encode.EncodedFrame
 		err error
 	)
 	ySize, cSize := width*height, (width/2)*(height/2)
 	switch format {
 	case formatI420:
-		res, err = enc.Encode(goav1.I420Frame{
+		res, err = enc.Encode(encode.I420Frame{
 			Y: frameBuf[:ySize], U: frameBuf[ySize : ySize+cSize], V: frameBuf[ySize+cSize : ySize+2*cSize],
 			YStride: width, ChromaStride: width / 2, Width: width, Height: height,
 		}, forceKey != 0)
 	case formatNV12:
-		res, err = enc.EncodeNV12(goav1.NV12Frame{
+		res, err = enc.EncodeNV12(encode.NV12Frame{
 			Y: frameBuf[:ySize], UV: frameBuf[ySize : ySize+2*cSize],
 			YStride: width, UVStride: width, Width: width, Height: height,
 		}, forceKey != 0)
 	case formatRGBA, formatRGBX, formatBGRA, formatBGRX:
 		bgr := format == formatBGRA || format == formatBGRX
 		rgbToI420(frameBuf, yuvBuf, width, height, bgr)
-		res, err = enc.Encode(goav1.I420Frame{
+		res, err = enc.Encode(encode.I420Frame{
 			Y: yuvBuf[:ySize], U: yuvBuf[ySize : ySize+cSize], V: yuvBuf[ySize+cSize:],
 			YStride: width, ChromaStride: width / 2, Width: width, Height: height,
 		}, forceKey != 0)
@@ -181,7 +181,7 @@ func rgbToI420(src, dst []byte, w, h int, bgr bool) {
 //go:wasmexport avSynth
 func avSynth(t int32) {
 	ySize, cSize := width*height, (width/2)*(height/2)
-	pattern.Fill(goav1.I420Frame{
+	pattern.Fill(encode.I420Frame{
 		Y: frameBuf[:ySize], U: frameBuf[ySize : ySize+cSize], V: frameBuf[ySize+cSize : ySize+2*cSize],
 		YStride: width, ChromaStride: width / 2, Width: width, Height: height,
 	}, int(t))
@@ -193,16 +193,16 @@ func avSynth(t int32) {
 //go:wasmexport avBench
 func avBench(frames int32) float64 {
 	const w, h = 640, 360
-	e, err := goav1.NewVideoEncoder(goav1.VideoEncoderConfig{
+	e, err := encode.NewVideoEncoder(encode.VideoEncoderConfig{
 		Width: w, Height: h, TargetBitrate: 1_000_000, Framerate: 30, MaxThreads: 1,
-		Content: goav1.EncoderContentCamera,
+		Content: encode.EncoderContentCamera,
 	})
 	if err != nil {
 		lastError = err.Error()
 		return -1
 	}
 	defer e.Close()
-	f := goav1.I420Frame{
+	f := encode.I420Frame{
 		Y: make([]byte, w*h), U: make([]byte, w*h/4), V: make([]byte, w*h/4),
 		YStride: w, ChromaStride: w / 2, Width: w, Height: h,
 	}

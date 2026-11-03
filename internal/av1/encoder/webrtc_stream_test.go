@@ -5,10 +5,10 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestWebRTCStreamPackagesDecodableFrames is the WebRTC integration gate: an
@@ -88,7 +88,7 @@ func TestWebRTCStreamPackagesDecodableFrames(t *testing.T) {
 		tus = append(tus, append([]byte(nil), ef.TU...))
 	}
 
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -445,7 +445,7 @@ func decodeCollectedWebRTCPictureTUs(t *testing.T, config encoder.Config, tusInO
 		if len(tus) == 0 {
 			continue
 		}
-		dec, err := goav1.NewDecoder(tus)
+		dec, err := decode.NewDecoder(tus)
 		if err != nil {
 			t.Fatalf("spatial %d NewDecoder: %v", spatialID, err)
 		}

@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderTileColumns is the tile-parallel gate: a width that selects
@@ -58,7 +58,7 @@ func TestVideoEncoderTileColumns(t *testing.T) {
 		tus = append(tus, append([]byte(nil), tu...))
 		recons = append(recons, cloneFrame(enc.Recon()))
 	}
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}

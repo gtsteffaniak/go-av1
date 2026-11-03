@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // keyframeWavefrontSource is a detailed 4:2:0 picture: smooth gradients,
@@ -71,7 +71,7 @@ func TestKeyframeWavefrontMatchesSerial(t *testing.T) {
 				_ = enc.Close()
 				if want == nil {
 					want = tus
-					dec, err := goav1.NewDecoder(tus)
+					dec, err := decode.NewDecoder(tus)
 					if err != nil {
 						t.Fatal(err)
 					}

@@ -19,11 +19,11 @@ import (
 
 	cdpruntime "github.com/chromedp/cdproto/runtime"
 	"github.com/chromedp/chromedp"
+	encode "github.com/gtsteffaniak/go-av1/pkg/encode"
+	rtp "github.com/gtsteffaniak/go-av1/pkg/rtp"
 	"github.com/pion/rtcp"
 	"github.com/pion/rtp"
 	"github.com/pion/webrtc/v4"
-
-	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 const (
@@ -187,10 +187,10 @@ func TestBrowserLiveRTCEncoderDirectRTPControlChurnPlayback(t *testing.T) {
 			options:    browserRTCEncoderDirectRTPControlChurnOptions(browserRTCEncoderDirectRTPControlChurnSingleSpatialConfig),
 			wantWidth:  width,
 			wantHeight: height,
-			wantModes: []goav1.EncoderScalabilityMode{
-				goav1.EncoderScalabilityModeL1T1,
-				goav1.EncoderScalabilityModeL1T2,
-				goav1.EncoderScalabilityModeL1T3,
+			wantModes: []encode.EncoderScalabilityMode{
+				encode.EncoderScalabilityModeL1T1,
+				encode.EncoderScalabilityModeL1T2,
+				encode.EncoderScalabilityModeL1T3,
 			},
 		},
 		browserRTCEncoderDirectRTPControlChurnScenarioFromPlayback(
@@ -245,7 +245,7 @@ func TestBrowserLiveRTCEncoderDirectRTPReceiverEstimatedMaximumBitrateControl(t 
 		droppedPackets.Add(1)
 		return true
 	}
-	options.OnConfigApplied = func(_ int, step int, cfg goav1.EncoderConfig) {
+	options.OnConfigApplied = func(_ int, step int, cfg encode.EncoderConfig) {
 		if step >= 0 {
 			return
 		}
@@ -391,10 +391,10 @@ type browserRTCEncoderDirectRTPPlaybackScenario struct {
 	minKeyFrames int
 }
 
-var browserRTCEncoderDirectRTPLocalKeyShiftModes = [...]goav1.EncoderScalabilityMode{
-	goav1.EncoderScalabilityModeL2T3_KEY_SHIFT,
-	goav1.EncoderScalabilityModeL3T2_KEY_SHIFT,
-	goav1.EncoderScalabilityModeL3T3_KEY_SHIFT,
+var browserRTCEncoderDirectRTPLocalKeyShiftModes = [...]encode.EncoderScalabilityMode{
+	encode.EncoderScalabilityModeL2T3_KEY_SHIFT,
+	encode.EncoderScalabilityModeL3T2_KEY_SHIFT,
+	encode.EncoderScalabilityModeL3T3_KEY_SHIFT,
 }
 
 type browserRTCEncoderDirectRTPControlChurnScenario struct {
@@ -403,12 +403,12 @@ type browserRTCEncoderDirectRTPControlChurnScenario struct {
 	options    rtcEncoderRTPStreamOptions
 	wantWidth  int
 	wantHeight int
-	wantModes  []goav1.EncoderScalabilityMode
+	wantModes  []encode.EncoderScalabilityMode
 }
 
 type browserRTCEncoderDirectRTPControlChurnEvidence struct {
 	mu              sync.Mutex
-	configs         []goav1.EncoderConfig
+	configs         []encode.EncoderConfig
 	pictures        int
 	keyPictures     int
 	frameTimestamps map[int]uint32
@@ -416,7 +416,7 @@ type browserRTCEncoderDirectRTPControlChurnEvidence struct {
 
 func (e *browserRTCEncoderDirectRTPControlChurnEvidence) attach(options *rtcEncoderRTPStreamOptions) {
 	prevConfig := options.OnConfigApplied
-	options.OnConfigApplied = func(frameIndex int, step int, cfg goav1.EncoderConfig) {
+	options.OnConfigApplied = func(frameIndex int, step int, cfg encode.EncoderConfig) {
 		if prevConfig != nil {
 			prevConfig(frameIndex, step, cfg)
 		}
@@ -425,7 +425,7 @@ func (e *browserRTCEncoderDirectRTPControlChurnEvidence) attach(options *rtcEnco
 		e.mu.Unlock()
 	}
 	prevPicture := options.OnPicture
-	options.OnPicture = func(frameIndex int, picture goav1.RTCPicture) {
+	options.OnPicture = func(frameIndex int, picture encode.RTCPicture) {
 		if prevPicture != nil {
 			prevPicture(frameIndex, picture)
 		}
@@ -458,10 +458,10 @@ func (e *browserRTCEncoderDirectRTPControlChurnEvidence) attach(options *rtcEnco
 	}
 }
 
-func (e *browserRTCEncoderDirectRTPControlChurnEvidence) assert(t *testing.T, label string, wantModes []goav1.EncoderScalabilityMode) {
+func (e *browserRTCEncoderDirectRTPControlChurnEvidence) assert(t *testing.T, label string, wantModes []encode.EncoderScalabilityMode) {
 	t.Helper()
 	e.mu.Lock()
-	configs := append([]goav1.EncoderConfig(nil), e.configs...)
+	configs := append([]encode.EncoderConfig(nil), e.configs...)
 	pictures := e.pictures
 	keyPictures := e.keyPictures
 	frameTimestamps := make(map[int]uint32, len(e.frameTimestamps))
@@ -480,11 +480,11 @@ func (e *browserRTCEncoderDirectRTPControlChurnEvidence) assert(t *testing.T, la
 		t.Fatalf("%s key pictures=%d want at least 2", label, keyPictures)
 	}
 
-	fps := make(map[goav1.EncoderRational]bool)
+	fps := make(map[encode.EncoderRational]bool)
 	targets := make(map[int32]bool)
-	rateControls := make(map[goav1.EncoderRateControlMode]bool)
-	contents := make(map[goav1.EncoderContentHint]bool)
-	modes := make(map[goav1.EncoderScalabilityMode]bool)
+	rateControls := make(map[encode.EncoderRateControlMode]bool)
+	contents := make(map[encode.EncoderContentHint]bool)
+	modes := make(map[encode.EncoderScalabilityMode]bool)
 	for _, cfg := range configs {
 		fps[cfg.MaxFramerate] = true
 		targets[cfg.TargetBitrateKbps] = true
@@ -498,10 +498,10 @@ func (e *browserRTCEncoderDirectRTPControlChurnEvidence) assert(t *testing.T, la
 	if len(targets) < 3 {
 		t.Fatalf("%s target bitrate values=%d configs=%v", label, len(targets), configs)
 	}
-	if !rateControls[goav1.EncoderRateControlCBR] || !rateControls[goav1.EncoderRateControlCQP] {
+	if !rateControls[encode.EncoderRateControlCBR] || !rateControls[encode.EncoderRateControlCQP] {
 		t.Fatalf("%s rate controls=%v want CBR and CQP", label, rateControls)
 	}
-	if !contents[goav1.EncoderContentCamera] || !contents[goav1.EncoderContentScreen] {
+	if !contents[encode.EncoderContentCamera] || !contents[encode.EncoderContentScreen] {
 		t.Fatalf("%s content hints=%v want camera and screen", label, contents)
 	}
 	for _, mode := range wantModes {
@@ -547,15 +547,15 @@ func browserRTCEncoderDirectRTPFrameTimestampDeltas(frameTimestamps map[int]uint
 }
 
 func browserRTCEncoderDirectRTPMatchedFrameDurations(
-	t *testing.T, configs []goav1.EncoderConfig, timestampDeltas map[uint32]bool,
+	t *testing.T, configs []encode.EncoderConfig, timestampDeltas map[uint32]bool,
 ) int {
 	t.Helper()
-	matched := make(map[goav1.EncoderRational]bool)
+	matched := make(map[encode.EncoderRational]bool)
 	for _, cfg := range configs {
 		if matched[cfg.MaxFramerate] {
 			continue
 		}
-		duration, err := goav1.EncoderWebRTCRTPFrameDuration(cfg)
+		duration, err := encode.EncoderWebRTCRTPFrameDuration(cfg)
 		if err != nil {
 			t.Fatalf("EncoderWebRTCRTPFrameDuration(%+v): %v", cfg, err)
 		}
@@ -570,19 +570,19 @@ func browserRTCEncoderDirectRTPMatchedFrameDurations(
 	return len(matched)
 }
 
-func browserRTCEncoderDirectRTPControlChurnOptions(configForStep func(step int) goav1.EncoderConfig) rtcEncoderRTPStreamOptions {
+func browserRTCEncoderDirectRTPControlChurnOptions(configForStep func(step int) encode.EncoderConfig) rtcEncoderRTPStreamOptions {
 	options := defaultRTCEncoderRTPStreamOptions()
 	options.ConfigForStep = configForStep
 	return options
 }
 
-func browserRTCEncoderDirectRTPControlChurnSingleSpatialConfig(step int) goav1.EncoderConfig {
+func browserRTCEncoderDirectRTPControlChurnSingleSpatialConfig(step int) encode.EncoderConfig {
 	cfg := rtcControlChurnConfig(step)
-	modes := [...]goav1.EncoderScalabilityMode{
-		goav1.EncoderScalabilityModeL1T1,
-		goav1.EncoderScalabilityModeL1T2,
-		goav1.EncoderScalabilityModeL1T3,
-		goav1.EncoderScalabilityModeL1T2,
+	modes := [...]encode.EncoderScalabilityMode{
+		encode.EncoderScalabilityModeL1T1,
+		encode.EncoderScalabilityModeL1T2,
+		encode.EncoderScalabilityModeL1T3,
+		encode.EncoderScalabilityModeL1T2,
 	}
 	cfg.Scalability = modes[step%len(modes)]
 	return cfg
@@ -597,13 +597,13 @@ func browserRTCEncoderDirectRTPControlChurnScenarioFromPlayback(
 		options:    scenario.options,
 		wantWidth:  scenario.wantWidth,
 		wantHeight: scenario.wantHeight,
-		wantModes:  []goav1.EncoderScalabilityMode{scenario.options.ConfigForStep(0).Scalability},
+		wantModes:  []encode.EncoderScalabilityMode{scenario.options.ConfigForStep(0).Scalability},
 	}
 }
 
 func browserRTCEncoderDirectRTPPlaybackScenarios(t *testing.T) []browserRTCEncoderDirectRTPPlaybackScenario {
 	t.Helper()
-	modes := goav1.EncoderWebRTCScalabilityModes()
+	modes := encode.EncoderWebRTCScalabilityModes()
 	scenarios := make([]browserRTCEncoderDirectRTPPlaybackScenario, 0, len(modes)+len(browserRTCEncoderDirectRTPLocalKeyShiftModes))
 	for _, mode := range modes {
 		scenarios = appendBrowserRTCEncoderDirectRTPPlaybackScenario(t, scenarios, mode)
@@ -617,7 +617,7 @@ func browserRTCEncoderDirectRTPPlaybackScenarios(t *testing.T) []browserRTCEncod
 func appendBrowserRTCEncoderDirectRTPPlaybackScenario(
 	t *testing.T,
 	scenarios []browserRTCEncoderDirectRTPPlaybackScenario,
-	mode goav1.EncoderScalabilityMode,
+	mode encode.EncoderScalabilityMode,
 ) []browserRTCEncoderDirectRTPPlaybackScenario {
 	t.Helper()
 	spatialLayers, temporalLayers, _, ok := mode.Layers()
@@ -627,7 +627,7 @@ func appendBrowserRTCEncoderDirectRTPPlaybackScenario(
 	options := defaultRTCEncoderRTPStreamOptions()
 	options.ConfigForStep = rtcControlChurnConfigForScalabilityMode(mode)
 	cfg := options.ConfigForStep(0)
-	normalized, err := goav1.SetWebRTCEncoderSVCConfig(cfg, 0, 0)
+	normalized, err := encode.SetWebRTCEncoderSVCConfig(cfg, 0, 0)
 	if err != nil {
 		t.Fatalf("normalize %s browser scenario: %v", mode, err)
 	}
@@ -642,7 +642,7 @@ func appendBrowserRTCEncoderDirectRTPPlaybackScenario(
 			delivery = "shared-svc-forward-base"
 		}
 		options.RTPOptionsForPicture = rtcActiveDecodeTargetOptionsForSpatialLayer(targetSpatialID, temporalLayers)
-		options.FrameFilter = func(frame goav1.RTCFrame) bool { return frame.SpatialID == targetSpatialID }
+		options.FrameFilter = func(frame encode.RTCFrame) bool { return frame.SpatialID == targetSpatialID }
 	}
 	layer := normalized.SpatialLayers[targetSpatialID]
 	return append(scenarios, browserRTCEncoderDirectRTPPlaybackScenario{
@@ -785,7 +785,7 @@ func TestBrowserLiveRTCEncoderDirectRTPImpairmentFeedback(t *testing.T) {
 		droppedPackets.Add(1)
 		return true
 	}
-	options.OnPicture = func(_ int, picture goav1.RTCPicture) {
+	options.OnPicture = func(_ int, picture encode.RTCPicture) {
 		if !picture.Keyframe {
 			return
 		}
@@ -875,11 +875,11 @@ func TestBrowserLiveRTCEncoderDirectRTPNACKRetransmission(t *testing.T) {
 		t.Skip(err)
 	}
 
-	cacheSlots := make([]goav1.RTPRetransmissionCacheSlot, 4096)
+	cacheSlots := make([]rtp.RTPRetransmissionCacheSlot, 4096)
 	for i := range cacheSlots {
 		cacheSlots[i].Packet = make([]byte, 0, 1600)
 	}
-	retransmitCache, err := goav1.BindRTPRetransmissionCache(cacheSlots)
+	retransmitCache, err := rtp.BindRTPRetransmissionCache(cacheSlots)
 	if err != nil {
 		t.Fatalf("BindRTPRetransmissionCache: %v", err)
 	}
@@ -949,7 +949,7 @@ func TestBrowserLiveRTCEncoderDirectRTPNACKRetransmission(t *testing.T) {
 		}
 		return nil
 	}
-	options.OnPicture = func(_ int, picture goav1.RTCPicture) {
+	options.OnPicture = func(_ int, picture encode.RTCPicture) {
 		// OnPicture runs immediately before this picture's RTP packetization,
 		// so DropPacket reads metadata for the same encoded picture.
 		frame := picture.Frames[0]
@@ -976,21 +976,21 @@ func TestBrowserLiveRTCEncoderDirectRTPNACKRetransmission(t *testing.T) {
 	}
 
 	retransmitBuf := make([]byte, 0, 1600*64)
-	retransmitSpans := make([]goav1.RTPRetransmissionPacketSpan, 64)
+	retransmitSpans := make([]rtp.RTPRetransmissionPacketSpan, 64)
 	nackSeqs := make([]uint16, 0, 64)
 	repairNACK := func(track *webrtc.TrackLocalStaticRTP, nack *rtcp.TransportLayerNack) bool {
 		if track == nil || len(nack.Nacks) == 0 {
 			return false
 		}
-		pairs := make([]goav1.RTCPGenericNACKPair, len(nack.Nacks))
+		pairs := make([]rtp.RTCPGenericNACKPair, len(nack.Nacks))
 		for i := range nack.Nacks {
-			pairs[i] = goav1.RTCPGenericNACKPair{
+			pairs[i] = rtp.RTCPGenericNACKPair{
 				PacketID:          nack.Nacks[i].PacketID,
 				LostPacketBitmask: uint16(nack.Nacks[i].LostPackets),
 			}
 		}
 		var err error
-		nackSeqs, err = goav1.AppendRTCPGenericNACKPairSequenceNumbers(nackSeqs[:0], pairs)
+		nackSeqs, err = rtp.AppendRTCPGenericNACKPairSequenceNumbers(nackSeqs[:0], pairs)
 		if err != nil {
 			repairMisses.Add(1)
 			return false
@@ -1441,7 +1441,7 @@ func bindBrowserReceiverEstimatedMaximumBitrateFeedback(
 	if options == nil || feedback == nil || options.ReceiverEstimatedMaximumBitrate != nil {
 		return
 	}
-	rembUpdates := make(chan goav1.RTCPReceiverEstimatedMaximumBitrate, 16)
+	rembUpdates := make(chan rtp.RTCPReceiverEstimatedMaximumBitrate, 16)
 	options.ReceiverEstimatedMaximumBitrate = rembUpdates
 	prev := feedback.OnReceiverEstimatedMaximumBitrate
 	feedback.OnReceiverEstimatedMaximumBitrate = func(remb *rtcp.ReceiverEstimatedMaximumBitrate) {
@@ -1486,7 +1486,7 @@ func newRTCEncoderRTPPeerConnectionWithOptions(options rtcEncoderRTPStreamOption
 		return nil, err
 	}
 	if err := mediaEngine.RegisterHeaderExtension(
-		webrtc.RTPHeaderExtensionCapability{URI: goav1.AV1RTPDependencyDescriptorURI},
+		webrtc.RTPHeaderExtensionCapability{URI: rtp.AV1RTPDependencyDescriptorURI},
 		webrtc.RTPCodecTypeVideo,
 	); err != nil {
 		return nil, err
@@ -1495,13 +1495,13 @@ func newRTCEncoderRTPPeerConnectionWithOptions(options rtcEncoderRTPStreamOption
 		mediaEngine.RegisterFeedback(
 			webrtc.RTCPFeedback{Type: webrtc.TypeRTCPFBTransportCC}, webrtc.RTPCodecTypeVideo)
 		if err := mediaEngine.RegisterHeaderExtension(
-			webrtc.RTPHeaderExtensionCapability{URI: goav1.AV1RTPTransportWideCCURI},
+			webrtc.RTPHeaderExtensionCapability{URI: rtp.AV1RTPTransportWideCCURI},
 			webrtc.RTPCodecTypeVideo,
 		); err != nil {
 			return nil, err
 		}
 		if err := mediaEngine.RegisterHeaderExtension(
-			webrtc.RTPHeaderExtensionCapability{URI: goav1.AV1RTPTransportWideCC02URI},
+			webrtc.RTPHeaderExtensionCapability{URI: rtp.AV1RTPTransportWideCC02URI},
 			webrtc.RTPCodecTypeVideo,
 		); err != nil {
 			return nil, err
@@ -1513,23 +1513,23 @@ func newRTCEncoderRTPPeerConnectionWithOptions(options rtcEncoderRTPStreamOption
 
 func rtcRTPHeaderExtensionsFromAnswer(answerSDP string) (rtcRTPHeaderExtensions, error) {
 	extensions := rtcRTPHeaderExtensions{
-		Profile: goav1.RTPExtensionProfileTwoByte,
+		Profile: rtp.RTPExtensionProfileTwoByte,
 	}
-	if dependencyID, ok := goav1.AV1SDPAnswersSendHeaderExtensionID(
-		answerSDP, goav1.AV1RTPDependencyDescriptorURI); ok {
+	if dependencyID, ok := rtp.AV1SDPAnswersSendHeaderExtensionID(
+		answerSDP, rtp.AV1RTPDependencyDescriptorURI); ok {
 		if dependencyID <= 0 || dependencyID > 255 {
 			return rtcRTPHeaderExtensions{}, fmt.Errorf("answer dependency descriptor extmap id=%d", dependencyID)
 		}
 		extensions.DependencyDescriptorID = uint8(dependencyID)
 	}
-	if transportCCID, ok := goav1.AV1SDPAnswersSendHeaderExtensionID(
-		answerSDP, goav1.AV1RTPTransportWideCCURI); ok {
+	if transportCCID, ok := rtp.AV1SDPAnswersSendHeaderExtensionID(
+		answerSDP, rtp.AV1RTPTransportWideCCURI); ok {
 		if transportCCID <= 0 || transportCCID > 255 {
 			return rtcRTPHeaderExtensions{}, fmt.Errorf("answer transport-wide-cc extmap id=%d", transportCCID)
 		}
 		extensions.TransportWideCCID = uint8(transportCCID)
-	} else if transportCC02ID, ok := goav1.AV1SDPAnswersSendHeaderExtensionID(
-		answerSDP, goav1.AV1RTPTransportWideCC02URI); ok {
+	} else if transportCC02ID, ok := rtp.AV1SDPAnswersSendHeaderExtensionID(
+		answerSDP, rtp.AV1RTPTransportWideCC02URI); ok {
 		if transportCC02ID <= 0 || transportCC02ID > 255 {
 			return rtcRTPHeaderExtensions{}, fmt.Errorf("answer transport-wide-cc-02 extmap id=%d", transportCC02ID)
 		}

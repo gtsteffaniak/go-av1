@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestEncodePFrameVariableBlocks is the variable-block-size gate: global
@@ -52,7 +52,7 @@ func TestEncodePFrameVariableBlocks(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+	dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -100,7 +100,7 @@ func TestEncodePFrameVariableBlocks(t *testing.T) {
 	if len(gTU)*4 >= len(keyTU) {
 		t.Fatalf("global-shift P %d bytes not far below key %d", len(gTU), len(keyTU))
 	}
-	dec2, err := goav1.NewDecoder([][]byte{keyTU, gTU})
+	dec2, err := decode.NewDecoder([][]byte{keyTU, gTU})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderFastPan proves the hierarchical coarse search: a 16px/frame
@@ -75,7 +75,7 @@ func TestVideoEncoderFastPan(t *testing.T) {
 		t.Fatalf("fast pan not tracked: avg inter %d vs key %d", avgInter, keyBytes)
 	}
 
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}

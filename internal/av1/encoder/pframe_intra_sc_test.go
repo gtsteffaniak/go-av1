@@ -3,8 +3,8 @@ package encoder_test
 import (
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestScreenContentIntraCandidatesDecodeExact encodes a scrolling text-like
@@ -65,7 +65,7 @@ func TestScreenContentIntraCandidatesDecodeExact(t *testing.T) {
 			recons = append(recons, append(append(append([]byte(nil), rc.Y...), rc.U...), rc.V...))
 		}
 		_ = enc.Close()
-		dec, err := goav1.NewDecoder(tus)
+		dec, err := decode.NewDecoder(tus)
 		if err != nil {
 			t.Fatal(err)
 		}

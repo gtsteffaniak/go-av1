@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // loopfilter_realc_recon_test.go is the multi-tile mask-path safety net: it
@@ -87,7 +87,7 @@ func runRealCReconMatch(t *testing.T, maxThreads int) {
 		t.Fatalf("flush: %v", err)
 	}
 
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}

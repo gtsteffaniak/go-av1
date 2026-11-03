@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestWebRTCStreamL1T3Metadata is the scalable-packaging gate for the
@@ -94,7 +94,7 @@ func TestWebRTCStreamL1T3Metadata(t *testing.T) {
 		tus = append(tus, append([]byte(nil), ef.TU...))
 	}
 
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}

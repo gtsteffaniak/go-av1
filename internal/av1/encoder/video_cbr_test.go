@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderCBRConvergesAndDecodes is the rate-control gate: a 30-frame
@@ -94,7 +94,7 @@ func TestVideoEncoderCBRConvergesAndDecodes(t *testing.T) {
 		t.Fatalf("steady-state %d bits/frame outside 30%% of target %d", steadyAvg, target)
 	}
 
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}

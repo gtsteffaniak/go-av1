@@ -13,14 +13,13 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	encode "github.com/gtsteffaniak/go-av1/pkg/encode"
 	"math"
 	"math/rand"
 	"os"
 	"runtime/pprof"
 	"strconv"
 	"time"
-
-	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 const (
@@ -30,9 +29,9 @@ const (
 	fps           = 60
 )
 
-func makeFrame(bg []byte, n, width, height int) goav1.I420Frame {
+func makeFrame(bg []byte, n, width, height int) encode.I420Frame {
 	cw, ch := width/2, height/2
-	f := goav1.I420Frame{
+	f := encode.I420Frame{
 		Y: make([]byte, width*height), U: make([]byte, cw*ch), V: make([]byte, cw*ch),
 		YStride: width, ChromaStride: cw, Width: width, Height: height,
 	}
@@ -198,14 +197,14 @@ func main() {
 		fmt.Fprintf(os.Stderr, "invalid qindex bounds: qindex %d minq %d maxq %d\n", *fixedQ, *minQ, *maxQ)
 		os.Exit(1)
 	}
-	var contentHint goav1.EncoderContentHint
+	var contentHint encode.EncoderContentHint
 	switch *content {
 	case "auto":
-		contentHint = goav1.EncoderContentAuto
+		contentHint = encode.EncoderContentAuto
 	case "camera":
-		contentHint = goav1.EncoderContentCamera
+		contentHint = encode.EncoderContentCamera
 	case "screen":
-		contentHint = goav1.EncoderContentScreen
+		contentHint = encode.EncoderContentScreen
 	default:
 		fmt.Fprintf(os.Stderr, "unknown -content %q\n", *content)
 		os.Exit(2)
@@ -214,7 +213,7 @@ func main() {
 	if *fixedQ > 0 {
 		targetBitrate = 0
 	}
-	enc, err := goav1.NewVideoEncoder(goav1.VideoEncoderConfig{
+	enc, err := encode.NewVideoEncoder(encode.VideoEncoderConfig{
 		Width: w, Height: h,
 		TargetBitrate: targetBitrate, Framerate: *infps,
 		QIndex:          uint8(*fixedQ),
@@ -233,7 +232,7 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	srcs := make([]goav1.I420Frame, nFrames)
+	srcs := make([]encode.I420Frame, nFrames)
 	if *input != "" {
 		raw, err := os.ReadFile(*input)
 		if err != nil {
@@ -249,7 +248,7 @@ func main() {
 		}
 		for n := range nFrames {
 			base := n * frameLen
-			srcs[n] = goav1.I420Frame{
+			srcs[n] = encode.I420Frame{
 				Y:       raw[base : base+lumaPixels],
 				U:       raw[base+lumaPixels : base+lumaPixels+cw*ch],
 				V:       raw[base+lumaPixels+cw*ch : base+frameLen],
@@ -330,7 +329,7 @@ func main() {
 		totalBytes += len(out.Data)
 		// The reconstruction is fetched only when something reads it: a
 		// non-reference frame applies its CDEF pass lazily on this call.
-		var r goav1.I420Frame
+		var r encode.I420Frame
 		if !*noPSNR || reconFile != nil {
 			r = enc.Reconstruction()
 		}

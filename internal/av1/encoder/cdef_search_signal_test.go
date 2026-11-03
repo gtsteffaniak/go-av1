@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestCDEFSearchMultiStrengthSignalsBitExact forces every searched picture
@@ -88,7 +88,7 @@ func TestCDEFSearchMultiStrengthSignalsBitExact(t *testing.T) {
 			if forced == before {
 				t.Fatal("no picture ran the CDEF search")
 			}
-			dec, err := goav1.NewDecoder(tus)
+			dec, err := decode.NewDecoder(tus)
 			if err != nil {
 				t.Fatal(err)
 			}
