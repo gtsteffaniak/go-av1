@@ -14,8 +14,8 @@ import (
 	"os"
 	"time"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/examples/browser-wasm/pattern"
+	encode "github.com/gtsteffaniak/go-av1/pkg/encode"
 )
 
 func main() {
@@ -30,18 +30,18 @@ func main() {
 	recon := flag.String("recon", "", "write the encoder reconstruction as raw I420 to this path")
 	flag.Parse()
 
-	var hint goav1.EncoderContentHint
+	var hint encode.EncoderContentHint
 	switch *content {
 	case "auto":
-		hint = goav1.EncoderContentAuto
+		hint = encode.EncoderContentAuto
 	case "camera":
-		hint = goav1.EncoderContentCamera
+		hint = encode.EncoderContentCamera
 	case "screen":
-		hint = goav1.EncoderContentScreen
+		hint = encode.EncoderContentScreen
 	default:
 		fatal(fmt.Errorf("unknown -content %q", *content))
 	}
-	enc, err := goav1.NewVideoEncoder(goav1.VideoEncoderConfig{
+	enc, err := encode.NewVideoEncoder(encode.VideoEncoderConfig{
 		Width: *w, Height: *h, TargetBitrate: *bitrate, Framerate: *fps,
 		MaxThreads: 1, Speed: int8(*speed), Content: hint,
 	})
@@ -70,7 +70,7 @@ func main() {
 		}
 		defer reconFile.Close()
 	}
-	f := goav1.I420Frame{
+	f := encode.I420Frame{
 		Y: make([]byte, *w**h), U: make([]byte, *w**h/4), V: make([]byte, *w**h/4),
 		YStride: *w, ChromaStride: *w / 2, Width: *w, Height: *h,
 	}

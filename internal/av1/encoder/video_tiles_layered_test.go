@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderLayeredTilesParity decodes a full-HD two-layer stream and
@@ -56,7 +56,7 @@ func TestVideoEncoderLayeredTilesParity(t *testing.T) {
 			Y: append([]byte(nil), rc.Y...), U: append([]byte(nil), rc.U...), V: append([]byte(nil), rc.V...),
 		})
 	}
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}

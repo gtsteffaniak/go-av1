@@ -6,10 +6,11 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	"github.com/gtsteffaniak/go-av1/internal/av1/obu"
 	"github.com/gtsteffaniak/go-av1/internal/av1/parser"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestEncodeKeyframeDecodeMatchesRecon is the non-lossless end-to-end gate:
@@ -60,7 +61,7 @@ func TestEncodeKeyframeDecodeMatchesRecon(t *testing.T) {
 			}
 			t.Logf("encoded TU: %d bytes (%.2f bpp)", len(tu), float64(len(tu)*8)/float64(tc.w*tc.h))
 
-			dec, err := goav1.NewDecoder([][]byte{tu})
+			dec, err := decode.NewDecoder([][]byte{tu})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}
@@ -126,7 +127,7 @@ func TestEncodeMonochromeKeyframeDecodeMatchesRecon(t *testing.T) {
 				t.Fatalf("prefix=%+v, want shown keyframe", prefix)
 			}
 
-			dec, err := goav1.NewDecoder([][]byte{tu})
+			dec, err := decode.NewDecoder([][]byte{tu})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}
@@ -199,7 +200,7 @@ func TestEncodeHighBitDepthMonochromeKeyframeDecodeMatchesRecon(t *testing.T) {
 				t.Fatalf("prefix=%+v, want shown keyframe", prefix)
 			}
 
-			dec, err := goav1.NewDecoder([][]byte{tu})
+			dec, err := decode.NewDecoder([][]byte{tu})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}
@@ -264,7 +265,7 @@ func TestEncodeKeyframeWithSequenceMaxDecodeMatchesRecon(t *testing.T) {
 		t.Fatalf("prefix=%+v size=%+v", prefix, size)
 	}
 
-	dec, err := goav1.NewDecoder([][]byte{tu})
+	dec, err := decode.NewDecoder([][]byte{tu})
 	if err != nil {
 		t.Fatalf("new decoder: %v", err)
 	}
@@ -291,7 +292,7 @@ func appendHighBitDepthMonoRaw(dst []byte, frame encoder.SourceFrameMono16) []by
 	return dst
 }
 
-func appendFramePlaneRaw(dst []byte, plane goav1.FramePlane, bytesPerSample int) []byte {
+func appendFramePlaneRaw(dst []byte, plane av1.FramePlane, bytesPerSample int) []byte {
 	if plane.Width == 0 || plane.Height == 0 || len(plane.Pix) == 0 {
 		return dst
 	}

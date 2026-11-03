@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderGoldenReference is the multi-ref gate: an object occludes a
@@ -74,7 +74,7 @@ func TestVideoEncoderGoldenReference(t *testing.T) {
 		t.Fatalf("golden reveal %dB not well below last-only %dB: golden reference not engaged", len(withGolden[2]), len(lastOnly[2]))
 	}
 
-	dec, err := goav1.NewDecoder(withGolden)
+	dec, err := decode.NewDecoder(withGolden)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -153,7 +153,7 @@ func TestHighBitDepthVideoEncoderGoldenReference(t *testing.T) {
 		if len(withGolden[2])*5 >= len(lastOnly[2])*4 {
 			t.Fatalf("10-bit mono golden reveal %dB not below last-only %dB", len(withGolden[2]), len(lastOnly[2]))
 		}
-		dec, err := goav1.NewDecoder(withGolden)
+		dec, err := decode.NewDecoder(withGolden)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -232,7 +232,7 @@ func TestHighBitDepthVideoEncoderGoldenReference(t *testing.T) {
 		if len(withGolden[2])*5 >= len(lastOnly[2])*4 {
 			t.Fatalf("10-bit 4:2:0 golden reveal %dB not below last-only %dB", len(withGolden[2]), len(lastOnly[2]))
 		}
-		dec, err := goav1.NewDecoder(withGolden)
+		dec, err := decode.NewDecoder(withGolden)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -381,7 +381,7 @@ func TestVideoEncoderCompoundGoldenAverageReference(t *testing.T) {
 		t.Fatalf("compound average %dB not well below last-only %dB", len(withGolden[2]), len(lastOnly[2]))
 	}
 
-	dec, err := goav1.NewDecoder(withGolden)
+	dec, err := decode.NewDecoder(withGolden)
 	if err != nil {
 		t.Fatal(err)
 	}

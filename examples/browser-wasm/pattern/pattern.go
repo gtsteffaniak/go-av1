@@ -3,12 +3,12 @@
 // wasm encoder share it, so both encode identical frames.
 package pattern
 
-import goav1 "github.com/gtsteffaniak/go-av1"
+import encode "github.com/gtsteffaniak/go-av1/pkg/encode"
 
 // Fill writes frame t of the scene into f: a XOR texture panning with t, a
 // bright disc sweeping across the middle, and slowly shifting chroma ramps.
 // f must have even Width and Height and planes of at least the matching size.
-func Fill(f goav1.I420Frame, t int) {
+func Fill(f encode.I420Frame, t int) {
 	w, h := f.Width, f.Height
 	for y := 0; y < h; y++ {
 		for x := 0; x < w; x++ {

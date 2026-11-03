@@ -16,10 +16,10 @@ import (
 	"testing"
 	"time"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	cpufeatures "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
 	"github.com/gtsteffaniak/go-av1/internal/benchenv"
+	encode "github.com/gtsteffaniak/go-av1/pkg/encode"
 )
 
 func TestParsePositiveList(t *testing.T) {
@@ -1153,7 +1153,7 @@ func TestWriteStatsRow(t *testing.T) {
 	if err := writeStatsHeader(writer); err != nil {
 		t.Fatal(err)
 	}
-	stats := goav1.EncoderDecisionStats{
+	stats := encode.EncoderDecisionStats{
 		Frames:             2,
 		Keyframes:          1,
 		InterFrames:        1,
@@ -1166,11 +1166,11 @@ func TestWriteStatsRow(t *testing.T) {
 		CodedBlocks:        7,
 		LumaTXBs:           7,
 	}
-	stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceLast] = 3
-	stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceGolden] = 1
-	stats.BlockSizes[goav1.EncoderDecisionBlockSize8x8] = 6
-	stats.TXTypes[goav1.EncoderDecisionTransformDCTDCT] = 6
-	stats.TXTypes[goav1.EncoderDecisionTransformADSTADST] = 1
+	stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceLast] = 3
+	stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceGolden] = 1
+	stats.BlockSizes[encode.EncoderDecisionBlockSize8x8] = 6
+	stats.TXTypes[encode.EncoderDecisionTransformDCTDCT] = 6
+	stats.TXTypes[encode.EncoderDecisionTransformADSTADST] = 1
 	stats.NonDCTTXBs = 1
 	row := benchRow{
 		clip:      "clip",
@@ -1215,7 +1215,7 @@ func TestWriteFrameStatsRow(t *testing.T) {
 	if err := writeFrameStatsHeader(writer); err != nil {
 		t.Fatal(err)
 	}
-	stats := goav1.EncoderDecisionStats{
+	stats := encode.EncoderDecisionStats{
 		Frames:             1,
 		InterFrames:        1,
 		Tiles:              2,
@@ -1227,8 +1227,8 @@ func TestWriteFrameStatsRow(t *testing.T) {
 		CompoundBlocks:     2,
 		NonDCTTXBs:         1,
 	}
-	stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceLast] = 2
-	stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceGolden] = 2
+	stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceLast] = 2
+	stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceGolden] = 2
 	row := benchRow{
 		clip:      "clip",
 		width:     64,
@@ -1301,13 +1301,13 @@ func TestWriteFrameMetricRow(t *testing.T) {
 }
 
 func TestDiffDecisionStats(t *testing.T) {
-	before := goav1.EncoderDecisionStats{Frames: 4, Blocks: 10}
-	before.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceLast] = 3
-	after := goav1.EncoderDecisionStats{Frames: 5, Blocks: 16, NonDCTTXBs: 2}
-	after.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceLast] = 5
+	before := encode.EncoderDecisionStats{Frames: 4, Blocks: 10}
+	before.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceLast] = 3
+	after := encode.EncoderDecisionStats{Frames: 5, Blocks: 16, NonDCTTXBs: 2}
+	after.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceLast] = 5
 	got := diffDecisionStats(after, before)
 	if got.Frames != 1 || got.Blocks != 6 || got.NonDCTTXBs != 2 ||
-		got.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceLast] != 2 {
+		got.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceLast] != 2 {
 		t.Fatalf("diff=%+v", got)
 	}
 	if subU64(1, 2) != 0 {
@@ -1370,7 +1370,7 @@ func TestMetadataConfigCopiesSlices(t *testing.T) {
 		goMaxProcs:         4,
 		goGC:               "off",
 		goav1MaxThreads:    4,
-		goav1Effort:        int(goav1.EncoderWebRTCMinEffortLevel),
+		goav1Effort:        int(encode.EncoderWebRTCMinEffortLevel),
 		goav1ProcessTiming: true,
 		aomThreads:         1,
 		aomRowMT:           0,
@@ -1407,7 +1407,7 @@ func TestMetadataConfigCopiesSlices(t *testing.T) {
 		!got.RequireSummary || !got.RequireCorpus || got.MinClips != 6 ||
 		got.MinSourceIDs != 2 || got.MinCategories != 2 ||
 		got.GoMaxProcs != 4 || got.GoGC != "off" || got.GoAV1MaxThreads != 4 ||
-		got.GoAV1Effort != int(goav1.EncoderWebRTCMinEffortLevel) ||
+		got.GoAV1Effort != int(encode.EncoderWebRTCMinEffortLevel) ||
 		!got.GoAV1ProcessTime ||
 		got.TileColumnsLog2 != 0 || got.TileSemantics != "tile-columns-log2" ||
 		got.AOMThreads != 1 || got.AOMRowMT != 0 ||
@@ -2380,7 +2380,7 @@ func TestRunEncoderJobsMeasuredInterleavesSamplesByPass(t *testing.T) {
 		{bitrate: 200, encoder: "aomenc"},
 	}
 	var calls []string
-	results := runEncoderJobsMeasuredWithRunner(cfg, nil, "source.yuv", jobs, func(sampleCfg benchConfig, _ []goav1.I420Frame, refPath, encoderName string, bitrate int) encodeResult {
+	results := runEncoderJobsMeasuredWithRunner(cfg, nil, "source.yuv", jobs, func(sampleCfg benchConfig, _ []encode.I420Frame, refPath, encoderName string, bitrate int) encodeResult {
 		if refPath != "source.yuv" {
 			t.Fatalf("refPath=%q", refPath)
 		}
@@ -2426,7 +2426,7 @@ func TestRunEncoderJobsMeasuredPublishRequiresDeterministicArtifacts(t *testing.
 	}
 	jobs := []encodeJob{{bitrate: 100, encoder: "goav1"}}
 	call := 0
-	results := runEncoderJobsMeasuredWithRunner(cfg, nil, "source.yuv", jobs, func(sampleCfg benchConfig, _ []goav1.I420Frame, refPath, encoderName string, bitrate int) encodeResult {
+	results := runEncoderJobsMeasuredWithRunner(cfg, nil, "source.yuv", jobs, func(sampleCfg benchConfig, _ []encode.I420Frame, refPath, encoderName string, bitrate int) encodeResult {
 		call++
 		if refPath != "source.yuv" {
 			t.Fatalf("refPath=%q", refPath)
@@ -2472,7 +2472,7 @@ func TestRunEncoderJobsMeasuredPublishRequiresCPUBudgetEvidence(t *testing.T) {
 	}
 	jobs := []encodeJob{{bitrate: 100, encoder: "goav1"}}
 	call := 0
-	results := runEncoderJobsMeasuredWithRunner(cfg, nil, "source.yuv", jobs, func(sampleCfg benchConfig, _ []goav1.I420Frame, refPath, encoderName string, bitrate int) encodeResult {
+	results := runEncoderJobsMeasuredWithRunner(cfg, nil, "source.yuv", jobs, func(sampleCfg benchConfig, _ []encode.I420Frame, refPath, encoderName string, bitrate int) encodeResult {
 		call++
 		if refPath != "source.yuv" {
 			t.Fatalf("refPath=%q", refPath)

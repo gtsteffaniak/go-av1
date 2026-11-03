@@ -3,8 +3,9 @@ package encoder_test
 import (
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 func TestEncodeScaledReferencePFrameLayerPoolDecodeMatchesRecon(t *testing.T) {
@@ -66,37 +67,37 @@ func compareBytePlane(t *testing.T, name string, got []byte, gotStride int, want
 	}
 }
 
-func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*goav1.Frame {
+func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*av1.Frame {
 	t.Helper()
 
 	const workers = 1
-	workerPool, err := goav1.NewTileWorkerPool(workers)
+	workerPool, err := decode.NewTileWorkerPool(workers)
 	if err != nil {
 		t.Fatalf("NewTileWorkerPool: %v", err)
 	}
 	defer workerPool.Close()
 
-	layerPool := newScaledReferenceDecodeLayerPool(t, 4, goav1.RefFrames+1)
-	adapter := goav1.NewDecoderFrameLayerPool(&layerPool)
+	layerPool := newScaledReferenceDecodeLayerPool(t, 4, av1.RefFrames+1)
+	adapter := decode.NewDecoderFrameLayerPool(&layerPool)
 
 	var (
-		stream        goav1.DecoderStream
-		refs          goav1.DecoderSurfaceReferences
-		state         goav1.DecoderFrameWorkState
-		frameContexts goav1.DecoderSharedFrameContextStore
-		stats         goav1.DecoderFrameWorkTileResidualStats
-		postFilter    goav1.DecoderFrameWorkReusableSupportedPostFilterRunner
-		sequence      goav1.SequenceHeader
+		stream        decode.DecoderStream
+		refs          decode.DecoderSurfaceReferences
+		state         decode.DecoderFrameWorkState
+		frameContexts decode.DecoderSharedFrameContextStore
+		stats         decode.DecoderFrameWorkTileResidualStats
+		postFilter    decode.DecoderFrameWorkReusableSupportedPostFilterRunner
+		sequence      av1.SequenceHeader
 		haveSequence  bool
 	)
-	referenceSurfaces := make([]int, goav1.InterRefsPerFrame)
-	referenceFrames := make([]*goav1.Frame, goav1.InterRefsPerFrame)
-	releases := make([]int, goav1.RefFrames)
-	events := make([]goav1.DecoderEvent, 16)
-	planSpans := make([]goav1.TileSpan, goav1.MaxTiles)
-	planJobs := make([]goav1.TileJob, goav1.MaxTiles)
-	planBatches := make([]goav1.TileBatch, goav1.MaxTiles)
-	outputs := make([]*goav1.Frame, 0, len(payloads))
+	referenceSurfaces := make([]int, av1.InterRefsPerFrame)
+	referenceFrames := make([]*av1.Frame, av1.InterRefsPerFrame)
+	releases := make([]int, av1.RefFrames)
+	events := make([]decode.DecoderEvent, 16)
+	planSpans := make([]av1.TileSpan, av1.MaxTiles)
+	planJobs := make([]av1.TileJob, av1.MaxTiles)
+	planBatches := make([]decode.TileBatch, av1.MaxTiles)
+	outputs := make([]*av1.Frame, 0, len(payloads))
 
 	for payloadIndex, payload := range payloads {
 		count, err := stream.PushLowOverhead(payload, events)
@@ -105,7 +106,7 @@ func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*goav1.Fram
 		}
 		for eventIndex := 0; eventIndex < count; eventIndex++ {
 			event := events[eventIndex]
-			if event.Kind == goav1.DecoderEventSequenceHeader {
+			if event.Kind == decode.DecoderEventSequenceHeader {
 				sequence = event.SequenceHeader
 				haveSequence = true
 			} else if !haveSequence {
@@ -116,26 +117,26 @@ func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*goav1.Fram
 			}
 
 			framePool := scaledReferenceDecodeFramePool(t, &layerPool, sequence, event)
-			size, err := goav1.DecoderFrameWorkResidualEventScratchLen(sequence, &event, workers, planSpans, planJobs, planBatches)
+			size, err := decode.DecoderFrameWorkResidualEventScratchLen(sequence, &event, workers, planSpans, planJobs, planBatches)
 			if err != nil {
 				t.Fatalf("payload %d event %d scratch len: %v", payloadIndex, eventIndex, err)
 			}
 			scratch := scaledReferenceDecodeEventScratch(size)
 
-			var batchRunner goav1.DecoderFrameWorkBatchResidualRunner
-			var batchRunnerPtr *goav1.DecoderFrameWorkBatchResidualRunner
+			var batchRunner decode.DecoderFrameWorkBatchResidualRunner
+			var batchRunnerPtr *decode.DecoderFrameWorkBatchResidualRunner
 			if size.Runner.Workers != 0 {
-				batchRunner, err = goav1.BindDecoderFrameWorkBatchResidualRunner(size.Runner, scratch.Runner)
+				batchRunner, err = decode.BindDecoderFrameWorkBatchResidualRunner(size.Runner, scratch.Runner)
 				if err != nil {
 					t.Fatalf("payload %d event %d bind residual runner: %v", payloadIndex, eventIndex, err)
 				}
 				batchRunnerPtr = &batchRunner
 			}
 
-			var sideData goav1.DecoderFrameWorkSideData
-			var sideDataPtr *goav1.DecoderFrameWorkSideData
+			var sideData decode.DecoderFrameWorkSideData
+			var sideDataPtr *decode.DecoderFrameWorkSideData
 			if scaledReferenceDecodeEventNeedsSideData(event) {
-				sideData, err = goav1.BindDecoderFrameWorkSideData(sequence, event.FrameSize, event.CDEF, event.Restoration, scratch.SideData)
+				sideData, err = decode.BindDecoderFrameWorkSideData(sequence, event.FrameSize, event.CDEF, event.Restoration, scratch.SideData)
 				if err != nil {
 					t.Fatalf("payload %d event %d bind side data: %v", payloadIndex, eventIndex, err)
 				}
@@ -146,9 +147,9 @@ func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*goav1.Fram
 				if framePool == nil {
 					return -1
 				}
-				return goav1.DecoderLayerPoolGlobalSurfaceID(&layerPool, framePool, local)
+				return decode.DecoderLayerPoolGlobalSurfaceID(&layerPool, framePool, local)
 			}
-			result, err := goav1.RunDecoderFrameWorkEventWithResidualRunner(goav1.DecoderFrameWorkResidualEventRequest{
+			result, err := decode.RunDecoderFrameWorkEventWithResidualRunner(decode.DecoderFrameWorkResidualEventRequest{
 				State:             &state,
 				Refs:              &refs,
 				FramePool:         framePool,
@@ -167,7 +168,7 @@ func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*goav1.Fram
 				SideData:          sideDataPtr,
 				PostRunner:        &postFilter,
 				Stats:             &stats,
-				External: goav1.DecoderFrameWorkExternalReferenceRuntime{
+				External: decode.DecoderFrameWorkExternalReferenceRuntime{
 					Provider:      adapter,
 					GlobalSurface: globalSurface,
 					Releaser:      adapter,
@@ -177,7 +178,7 @@ func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*goav1.Fram
 			if err != nil {
 				t.Fatalf("payload %d event %d run: %v", payloadIndex, eventIndex, err)
 			}
-			if goav1.DecoderEventOutputsFrame(&event) {
+			if decode.DecoderEventOutputsFrame(&event) {
 				if result.Output == nil {
 					t.Fatalf("payload %d event %d output frame is nil", payloadIndex, eventIndex)
 				}
@@ -188,11 +189,11 @@ func decodeLayerPoolLowOverheads(t *testing.T, payloads ...[]byte) []*goav1.Fram
 	return outputs
 }
 
-func scaledReferenceDecodeFramePool(t *testing.T, pool *goav1.FrameLayerPool, sequence goav1.SequenceHeader, event goav1.DecoderEvent) *goav1.FramePool {
+func scaledReferenceDecodeFramePool(t *testing.T, pool *av1.FrameLayerPool, sequence av1.SequenceHeader, event decode.DecoderEvent) *av1.FramePool {
 	t.Helper()
 	switch event.Kind {
-	case goav1.DecoderEventFrameHeader, goav1.DecoderEventFrame, goav1.DecoderEventTileGroup:
-		format, err := goav1.FrameCodedFormatFromHeaders(sequence, event.FrameSize, 64)
+	case decode.DecoderEventFrameHeader, decode.DecoderEventFrame, decode.DecoderEventTileGroup:
+		format, err := av1.FrameCodedFormatFromHeaders(sequence, event.FrameSize, 64)
 		if err != nil {
 			t.Fatalf("FrameCodedFormatFromHeaders: %v", err)
 		}
@@ -206,58 +207,58 @@ func scaledReferenceDecodeFramePool(t *testing.T, pool *goav1.FrameLayerPool, se
 	}
 }
 
-func scaledReferenceDecodeEventNeedsSideData(event goav1.DecoderEvent) bool {
+func scaledReferenceDecodeEventNeedsSideData(event decode.DecoderEvent) bool {
 	switch event.Kind {
-	case goav1.DecoderEventFrameHeader, goav1.DecoderEventFrame, goav1.DecoderEventTileGroup:
+	case decode.DecoderEventFrameHeader, decode.DecoderEventFrame, decode.DecoderEventTileGroup:
 		return true
 	default:
 		return false
 	}
 }
 
-func scaledReferenceDecodeEventScratch(size goav1.DecoderFrameWorkResidualEventScratchSize) goav1.DecoderFrameWorkResidualEventScratch {
-	return goav1.DecoderFrameWorkResidualEventScratch{
-		Runner: goav1.DecoderFrameWorkBatchResidualRunnerScratch{
-			States:                  make([]goav1.TileDecodeState, size.Runner.Workers),
-			Storages:                make([]goav1.DecoderFrameWorkTileResidualCDFStorage, size.Runner.Workers),
-			TileScratch:             make([]goav1.DecoderFrameWorkTileResidualScratch, size.Runner.Workers),
-			RestorationRequests:     make([]goav1.DecoderFrameWorkTileRestorationRequest, size.Runner.RestorationRequests),
-			PredictionScratch:       make([]goav1.DecoderFrameWorkPredictionScratch, size.Runner.Workers),
-			InterPredictionScratch:  make([]goav1.DecoderFrameWorkInterPredictionScratch, size.Runner.Workers),
-			Stats:                   make([]goav1.DecoderFrameWorkTileResidualStats, size.Runner.Workers),
+func scaledReferenceDecodeEventScratch(size decode.DecoderFrameWorkResidualEventScratchSize) decode.DecoderFrameWorkResidualEventScratch {
+	return decode.DecoderFrameWorkResidualEventScratch{
+		Runner: decode.DecoderFrameWorkBatchResidualRunnerScratch{
+			States:                  make([]av1.TileDecodeState, size.Runner.Workers),
+			Storages:                make([]decode.DecoderFrameWorkTileResidualCDFStorage, size.Runner.Workers),
+			TileScratch:             make([]decode.DecoderFrameWorkTileResidualScratch, size.Runner.Workers),
+			RestorationRequests:     make([]decode.DecoderFrameWorkTileRestorationRequest, size.Runner.RestorationRequests),
+			PredictionScratch:       make([]decode.DecoderFrameWorkPredictionScratch, size.Runner.Workers),
+			InterPredictionScratch:  make([]decode.DecoderFrameWorkInterPredictionScratch, size.Runner.Workers),
+			Stats:                   make([]decode.DecoderFrameWorkTileResidualStats, size.Runner.Workers),
 			Int32Scratch:            make([]int32, size.Runner.Int32Scratch),
 			ResidualScratch:         make([]int16, size.Runner.ResidualScratch),
-			LoopContextAboveScratch: make([]goav1.TileBlockLoopRootAboveContext, size.Runner.LoopContextAbove),
+			LoopContextAboveScratch: make([]av1.TileBlockLoopRootAboveContext, size.Runner.LoopContextAbove),
 		},
-		SideData: goav1.DecoderFrameWorkSideDataScratch{
+		SideData: decode.DecoderFrameWorkSideDataScratch{
 			CDEFIndexMap:             make([]uint8, size.SideData.CDEFIndexMap),
 			CDEFReadMap:              make([]bool, size.SideData.CDEFReadMap),
-			LoopFilterMap:            make([]goav1.DecoderFrameWorkLoopFilterBlockRecord, size.SideData.LoopFilterMap),
-			RestorationRecords:       make([]goav1.TileRestorationUnitRecord, size.SideData.RestorationRecords),
+			LoopFilterMap:            make([]decode.DecoderFrameWorkLoopFilterBlockRecord, size.SideData.LoopFilterMap),
+			RestorationRecords:       make([]av1.TileRestorationUnitRecord, size.SideData.RestorationRecords),
 			RestorationBoundaryAbove: make([]uint16, size.SideData.RestorationBoundaryAbove),
 			RestorationBoundaryBelow: make([]uint16, size.SideData.RestorationBoundaryBelow),
 		},
-		Spans:   make([]goav1.TileSpan, size.Plan.SpanCount),
-		Jobs:    make([]goav1.TileJob, size.Plan.JobCount),
-		Batches: make([]goav1.TileBatch, size.Plan.BatchCount),
+		Spans:   make([]av1.TileSpan, size.Plan.SpanCount),
+		Jobs:    make([]av1.TileJob, size.Plan.JobCount),
+		Batches: make([]decode.TileBatch, size.Plan.BatchCount),
 	}
 }
 
-func newScaledReferenceDecodeLayerPool(t *testing.T, layers int, surfacesPerLayer int) goav1.FrameLayerPool {
+func newScaledReferenceDecodeLayerPool(t *testing.T, layers int, surfacesPerLayer int) av1.FrameLayerPool {
 	t.Helper()
-	factory := goav1.FrameLayerFactoryFunc(func(format goav1.FrameFormat) (goav1.FramePool, error) {
-		_, backingSize, err := goav1.FramePoolRequiredSize(format, surfacesPerLayer)
+	factory := av1.FrameLayerFactoryFunc(func(format av1.FrameFormat) (av1.FramePool, error) {
+		_, backingSize, err := av1.FramePoolRequiredSize(format, surfacesPerLayer)
 		if err != nil {
-			return goav1.FramePool{}, err
+			return av1.FramePool{}, err
 		}
-		return goav1.BindFramePool(make([]byte, backingSize), format,
-			make([]goav1.Frame, surfacesPerLayer),
+		return av1.BindFramePool(make([]byte, backingSize), format,
+			make([]av1.Frame, surfacesPerLayer),
 			make([]int, surfacesPerLayer),
 			make([]bool, surfacesPerLayer))
 	})
-	layerPool, err := goav1.BindFrameLayerPool(
-		make([]goav1.FramePool, layers),
-		make([]goav1.FrameFormat, layers),
+	layerPool, err := av1.BindFrameLayerPool(
+		make([]av1.FramePool, layers),
+		make([]av1.FrameFormat, layers),
 		make([]bool, layers),
 		256,
 		factory,

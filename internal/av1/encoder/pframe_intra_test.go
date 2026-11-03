@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestEncodePFrameSceneChange is the intra-in-P gate: frame 2 cuts to an
@@ -77,7 +77,7 @@ func TestEncodePFrameSceneChange(t *testing.T) {
 		t.Fatalf("scene-cut P %dB not below key %dB: intra fallback not engaged", len(cutTU), len(keyTU))
 	}
 
-	dec, err := goav1.NewDecoder([][]byte{keyTU, cutTU, panTU})
+	dec, err := decode.NewDecoder([][]byte{keyTU, cutTU, panTU})
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -20,11 +20,10 @@ import (
 	"sync/atomic"
 	"time"
 
+	encode "github.com/gtsteffaniak/go-av1/pkg/encode"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v4"
 	"github.com/pion/webrtc/v4/pkg/media"
-
-	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 //go:embed index.html
@@ -152,7 +151,7 @@ func handleOfferWithPeerConnectionHook(
 // stream encodes the animated scene and writes one temporal unit per tick
 // until the peer connection goes away.
 func stream(track *webrtc.TrackLocalStaticSample, wantKey *atomic.Bool, bitrate int, done <-chan struct{}) {
-	enc, err := goav1.NewVideoEncoder(goav1.VideoEncoderConfig{
+	enc, err := encode.NewVideoEncoder(encode.VideoEncoderConfig{
 		Width: width, Height: height,
 		TargetBitrate: bitrate, Framerate: fps,
 		TemporalLayers: 2,
@@ -190,7 +189,7 @@ func stream(track *webrtc.TrackLocalStaticSample, wantKey *atomic.Bool, bitrate 
 // frame rate.
 type scene struct {
 	wide   []byte
-	frame0 goav1.I420Frame
+	frame0 encode.I420Frame
 }
 
 func newScene() *scene {
@@ -206,7 +205,7 @@ func newScene() *scene {
 		}
 	}
 	cw, ch := width/2, height/2
-	f := goav1.I420Frame{
+	f := encode.I420Frame{
 		Y: make([]byte, width*height), U: make([]byte, cw*ch), V: make([]byte, cw*ch),
 		YStride: width, ChromaStride: cw, Width: width, Height: height,
 	}
@@ -217,7 +216,7 @@ func newScene() *scene {
 	return &scene{wide: wide, frame0: f}
 }
 
-func (s *scene) frame(n int) goav1.I420Frame {
+func (s *scene) frame(n int) encode.I420Frame {
 	f := s.frame0
 	off := (n * 4) % 512
 	for y := 0; y < height; y++ {

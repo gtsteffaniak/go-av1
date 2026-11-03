@@ -17,16 +17,16 @@ package main
 import (
 	"crypto/md5"
 	"encoding/hex"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 	"runtime"
 	"syscall/js"
 	"time"
-
-	goav1 "github.com/gtsteffaniak/go-av1"
 )
 
 var (
-	dec     *goav1.Decoder
-	pending []*goav1.Frame // frames from the last DecodeNext not yet handed out
+	dec     *decode.Decoder
+	pending []*av1.Frame // frames from the last DecodeNext not yet handed out
 	packed  []byte
 )
 
@@ -47,7 +47,7 @@ func open(_ js.Value, args []js.Value) any {
 	}
 	ivf := make([]byte, args[0].Get("byteLength").Int())
 	js.CopyBytesToGo(ivf, args[0])
-	d, err := goav1.NewDecoderFromIVF(ivf, goav1.WithWorkers(1))
+	d, err := decode.NewDecoderFromIVF(ivf, decode.WithWorkers(1))
 	if err != nil {
 		return err.Error()
 	}
@@ -86,9 +86,9 @@ func next(js.Value, []js.Value) any {
 
 // pack8 appends the visible Y, U, V samples of f without stride padding,
 // reducing high-bit-depth samples to their top 8 bits.
-func pack8(dst []byte, f *goav1.Frame) []byte {
+func pack8(dst []byte, f *av1.Frame) []byte {
 	shift := uint(f.Format.BitDepth) - 8
-	for _, p := range []goav1.FramePlane{f.Y, f.U, f.V} {
+	for _, p := range []av1.FramePlane{f.Y, f.U, f.V} {
 		for r := 0; r < p.Height; r++ {
 			row := p.Pix[r*p.Stride:]
 			if f.Layout.BytesPerSample == 1 {
@@ -148,7 +148,7 @@ func bench(_ js.Value, args []js.Value) any {
 		}
 		for _, f := range out {
 			bps := f.Layout.BytesPerSample
-			for _, p := range []goav1.FramePlane{f.Y, f.U, f.V} {
+			for _, p := range []av1.FramePlane{f.Y, f.U, f.V} {
 				for r := 0; r < p.Height; r++ {
 					h.Write(p.Pix[r*p.Stride : r*p.Stride+p.Width*bps])
 				}

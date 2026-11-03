@@ -52,13 +52,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
 	"io"
 	"os"
 	"sort"
 	"strings"
 	"time"
-
-	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 // scaledPredEnvVar mirrors internal/av1/threading.frameWorkScaledRefAllowedEnv.

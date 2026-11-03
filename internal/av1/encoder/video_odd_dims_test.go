@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderOddDimensions proves frames whose dimensions are not
@@ -57,7 +57,7 @@ func TestVideoEncoderOddDimensions(t *testing.T) {
 					YStride: rc.YStride, ChromaStride: rc.ChromaStride, Width: w, Height: h,
 				})
 			}
-			dec, err := goav1.NewDecoder(tus)
+			dec, err := decode.NewDecoder(tus)
 			if err != nil {
 				t.Fatal(err)
 			}

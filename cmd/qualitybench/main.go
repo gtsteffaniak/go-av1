@@ -27,10 +27,12 @@ import (
 	"strings"
 	"time"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	cpufeatures "github.com/gtsteffaniak/go-av1/internal/av1/dsp/cpu"
 	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
 	"github.com/gtsteffaniak/go-av1/internal/benchenv"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
+	encode "github.com/gtsteffaniak/go-av1/pkg/encode"
 )
 
 var observeBenchmarkCPUState = benchenv.ObserveCPUState
@@ -153,7 +155,7 @@ type encodeResult struct {
 	decodedSHA256    string
 	status           string
 	errText          string
-	stats            goav1.EncoderDecisionStats
+	stats            encode.EncoderDecisionStats
 	frameStats       []goAV1FrameStats
 	command          []string
 	settings         map[string]string
@@ -168,19 +170,19 @@ type encodeResult struct {
 }
 
 type goAV1EncodeHelperResult struct {
-	Encoder          string                     `json:"encoder"`
-	TargetBPS        int                        `json:"target_bps"`
-	Bytes            int64                      `json:"bytes"`
-	EncodedPath      string                     `json:"encoded_path,omitempty"`
-	EncodedContainer string                     `json:"encoded_container,omitempty"`
-	EncodedBytes     int64                      `json:"encoded_bytes,omitempty"`
-	EncodedSHA256    string                     `json:"encoded_sha256,omitempty"`
-	DecodedYUV       string                     `json:"decoded_yuv,omitempty"`
-	Status           string                     `json:"status"`
-	Error            string                     `json:"error,omitempty"`
-	Stats            goav1.EncoderDecisionStats `json:"stats,omitempty"`
-	FrameStats       []goAV1FrameStats          `json:"frame_stats,omitempty"`
-	Settings         map[string]string          `json:"settings,omitempty"`
+	Encoder          string                      `json:"encoder"`
+	TargetBPS        int                         `json:"target_bps"`
+	Bytes            int64                       `json:"bytes"`
+	EncodedPath      string                      `json:"encoded_path,omitempty"`
+	EncodedContainer string                      `json:"encoded_container,omitempty"`
+	EncodedBytes     int64                       `json:"encoded_bytes,omitempty"`
+	EncodedSHA256    string                      `json:"encoded_sha256,omitempty"`
+	DecodedYUV       string                      `json:"decoded_yuv,omitempty"`
+	Status           string                      `json:"status"`
+	Error            string                      `json:"error,omitempty"`
+	Stats            encode.EncoderDecisionStats `json:"stats,omitempty"`
+	FrameStats       []goAV1FrameStats           `json:"frame_stats,omitempty"`
+	Settings         map[string]string           `json:"settings,omitempty"`
 }
 
 type metrics struct {
@@ -330,7 +332,7 @@ type goAV1FrameStats struct {
 	Bytes           int64
 	Duration        time.Duration
 	CumulativeBytes int64
-	Stats           goav1.EncoderDecisionStats
+	Stats           encode.EncoderDecisionStats
 }
 
 type frameMetricValue struct {
@@ -912,8 +914,8 @@ func parseFlags() (benchConfig, error) {
 	if cfg.goav1MaxThreads < 0 {
 		return benchConfig{}, fmt.Errorf("invalid goav1 MaxThreads %d", cfg.goav1MaxThreads)
 	}
-	if cfg.goav1Effort < goav1.EncoderWebRTCMinEffortLevel || cfg.goav1Effort > goav1.EncoderWebRTCMaxEffortLevel {
-		return benchConfig{}, fmt.Errorf("invalid goav1 effort level %d: valid range is %d..%d", cfg.goav1Effort, goav1.EncoderWebRTCMinEffortLevel, goav1.EncoderWebRTCMaxEffortLevel)
+	if cfg.goav1Effort < encode.EncoderWebRTCMinEffortLevel || cfg.goav1Effort > encode.EncoderWebRTCMaxEffortLevel {
+		return benchConfig{}, fmt.Errorf("invalid goav1 effort level %d: valid range is %d..%d", cfg.goav1Effort, encode.EncoderWebRTCMinEffortLevel, encode.EncoderWebRTCMaxEffortLevel)
 	}
 	if cfg.aomThreads <= 0 {
 		return benchConfig{}, fmt.Errorf("invalid aomenc --threads value %d", cfg.aomThreads)
@@ -2777,7 +2779,7 @@ func writeStatsHeader(writer *csv.Writer) error {
 	})
 }
 
-func writeStatsRow(writer *csv.Writer, row benchRow, stats goav1.EncoderDecisionStats) error {
+func writeStatsRow(writer *csv.Writer, row benchRow, stats encode.EncoderDecisionStats) error {
 	return writer.Write([]string{
 		row.clip,
 		strconv.Itoa(row.width),
@@ -2801,21 +2803,21 @@ func writeStatsRow(writer *csv.Writer, row benchRow, stats goav1.EncoderDecision
 		formatU64(stats.SplitTXBlocks),
 		formatU64(stats.SingleTXBlocks),
 		formatU64(stats.LumaTXBs),
-		formatU64(stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceLast]),
-		formatU64(stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceGolden]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize8x8]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize16x16]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize32x32]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize64x64]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize16x8]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize8x16]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize32x16]),
-		formatU64(stats.BlockSizes[goav1.EncoderDecisionBlockSize16x32]),
-		formatU64(stats.TXTypes[goav1.EncoderDecisionTransformDCTDCT]),
-		formatU64(stats.TXTypes[goav1.EncoderDecisionTransformADSTDCT]),
-		formatU64(stats.TXTypes[goav1.EncoderDecisionTransformDCTADST]),
-		formatU64(stats.TXTypes[goav1.EncoderDecisionTransformADSTADST]),
-		formatU64(stats.TXTypes[goav1.EncoderDecisionTransformIDTX]),
+		formatU64(stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceLast]),
+		formatU64(stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceGolden]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize8x8]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize16x16]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize32x32]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize64x64]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize16x8]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize8x16]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize32x16]),
+		formatU64(stats.BlockSizes[encode.EncoderDecisionBlockSize16x32]),
+		formatU64(stats.TXTypes[encode.EncoderDecisionTransformDCTDCT]),
+		formatU64(stats.TXTypes[encode.EncoderDecisionTransformADSTDCT]),
+		formatU64(stats.TXTypes[encode.EncoderDecisionTransformDCTADST]),
+		formatU64(stats.TXTypes[encode.EncoderDecisionTransformADSTADST]),
+		formatU64(stats.TXTypes[encode.EncoderDecisionTransformIDTX]),
 		formatU64(stats.NonDCTTXBs),
 		row.status,
 		row.errText,
@@ -2863,8 +2865,8 @@ func writeFrameStatsRow(writer *csv.Writer, row benchRow, frame goAV1FrameStats)
 		formatU64(stats.SkipBlocks),
 		formatU64(stats.CodedBlocks),
 		formatU64(stats.CompoundBlocks),
-		formatU64(stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceLast]),
-		formatU64(stats.PrimaryReferenceBlocks[goav1.EncoderDecisionReferenceGolden]),
+		formatU64(stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceLast]),
+		formatU64(stats.PrimaryReferenceBlocks[encode.EncoderDecisionReferenceGolden]),
 		formatU64(stats.NonDCTTXBs),
 		row.status,
 		row.errText,
@@ -2918,8 +2920,8 @@ func goAV1DiagnosticsEnabled(cfg benchConfig) bool {
 	return cfg.statsCSVPath != "" || cfg.frameStatsCSVPath != ""
 }
 
-func diffDecisionStats(after, before goav1.EncoderDecisionStats) goav1.EncoderDecisionStats {
-	var out goav1.EncoderDecisionStats
+func diffDecisionStats(after, before encode.EncoderDecisionStats) encode.EncoderDecisionStats {
+	var out encode.EncoderDecisionStats
 	out.Frames = subU64(after.Frames, before.Frames)
 	out.Keyframes = subU64(after.Keyframes, before.Keyframes)
 	out.InterFrames = subU64(after.InterFrames, before.InterFrames)
@@ -3940,7 +3942,7 @@ func rdPointsFor(rows []benchRow, clip string, encoder string, getMetric func(me
 	return points
 }
 
-func loadFrames(cfg benchConfig) ([]goav1.I420Frame, string, error) {
+func loadFrames(cfg benchConfig) ([]encode.I420Frame, string, error) {
 	if cfg.input == "" {
 		return syntheticFrames(cfg.frames, cfg.width, cfg.height), "synthetic", nil
 	}
@@ -3954,10 +3956,10 @@ func loadFrames(cfg benchConfig) ([]goav1.I420Frame, string, error) {
 	if len(raw) != expected {
 		return nil, "", fmt.Errorf("input size=%d, want exact raw I420 size %d (%d frames)", len(raw), expected, cfg.frames)
 	}
-	frames := make([]goav1.I420Frame, cfg.frames)
+	frames := make([]encode.I420Frame, cfg.frames)
 	for n := range cfg.frames {
 		base := n * frameLen
-		frames[n] = goav1.I420Frame{
+		frames[n] = encode.I420Frame{
 			Y:            raw[base : base+cfg.width*cfg.height],
 			U:            raw[base+cfg.width*cfg.height : base+cfg.width*cfg.height+cw*ch],
 			V:            raw[base+cfg.width*cfg.height+cw*ch : base+frameLen],
@@ -3970,7 +3972,7 @@ func loadFrames(cfg benchConfig) ([]goav1.I420Frame, string, error) {
 	return frames, filepath.Base(cfg.input), nil
 }
 
-func syntheticFrames(count, width, height int) []goav1.I420Frame {
+func syntheticFrames(count, width, height int) []encode.I420Frame {
 	lumaPixels := width * height
 	rng := rand.New(rand.NewSource(9))
 	bg := make([]byte, lumaPixels)
@@ -3990,16 +3992,16 @@ func syntheticFrames(count, width, height int) []goav1.I420Frame {
 		}
 	}
 	copy(bg, blurred)
-	frames := make([]goav1.I420Frame, count)
+	frames := make([]encode.I420Frame, count)
 	for n := range count {
 		frames[n] = makeFrame(bg, n, width, height)
 	}
 	return frames
 }
 
-func makeFrame(bg []byte, n, width, height int) goav1.I420Frame {
+func makeFrame(bg []byte, n, width, height int) encode.I420Frame {
 	cw, ch := width/2, height/2
-	f := goav1.I420Frame{
+	f := encode.I420Frame{
 		Y:            make([]byte, width*height),
 		U:            make([]byte, cw*ch),
 		V:            make([]byte, cw*ch),
@@ -4040,7 +4042,7 @@ func makeFrame(bg []byte, n, width, height int) goav1.I420Frame {
 	return f
 }
 
-func writeFrames(path string, frames []goav1.I420Frame, width, height int) error {
+func writeFrames(path string, frames []encode.I420Frame, width, height int) error {
 	f, err := os.Create(path)
 	if err != nil {
 		return err
@@ -4054,7 +4056,7 @@ func writeFrames(path string, frames []goav1.I420Frame, width, height int) error
 	return nil
 }
 
-func writeFrame(w io.Writer, frame goav1.I420Frame, width, height int) error {
+func writeFrame(w io.Writer, frame encode.I420Frame, width, height int) error {
 	if len(frame.Y) < (height-1)*frame.YStride+width {
 		return errors.New("short Y plane")
 	}
@@ -4159,7 +4161,7 @@ func decodeLengthPrefixedLowOverheadToYUV(payloadPath, yuvPath string, width, he
 	if err != nil {
 		return 0, "", err
 	}
-	dec, err := goav1.NewDecoder(payloads)
+	dec, err := decode.NewDecoder(payloads)
 	if err != nil {
 		return 0, "", err
 	}
@@ -4325,7 +4327,7 @@ func decodeGoAV1MetricYUV(cfg benchConfig, payloadPath, yuvPath string, width, h
 	return decodeLengthPrefixedLowOverheadToYUV(payloadPath, yuvPath, width, height, frames)
 }
 
-func writeDecoded420Frame(w io.Writer, frame *goav1.Frame, width, height int) error {
+func writeDecoded420Frame(w io.Writer, frame *av1.Frame, width, height int) error {
 	if frame == nil {
 		return errors.New("nil decoded frame")
 	}
@@ -4351,7 +4353,7 @@ func writeDecoded420Frame(w io.Writer, frame *goav1.Frame, width, height int) er
 	return nil
 }
 
-func writeDecodedPlane(w io.Writer, plane goav1.FramePlane) error {
+func writeDecodedPlane(w io.Writer, plane av1.FramePlane) error {
 	if plane.Width == 0 || plane.Height == 0 {
 		return errors.New("empty plane")
 	}
@@ -4472,7 +4474,7 @@ func goAV1EncodeHelperArgs(cfg benchConfig, refPath string, bitrate int, resultP
 	}
 }
 
-func runEncoder(cfg benchConfig, frames []goav1.I420Frame, refPath string, encoderName string, bitrate int) encodeResult {
+func runEncoder(cfg benchConfig, frames []encode.I420Frame, refPath string, encoderName string, bitrate int) encodeResult {
 	encoderName = canonicalEncoderName(encoderName)
 	switch encoderName {
 	case "goav1":
@@ -4493,7 +4495,7 @@ func runEncoder(cfg benchConfig, frames []goav1.I420Frame, refPath string, encod
 	}
 }
 
-func runEncoderMeasured(cfg benchConfig, frames []goav1.I420Frame, refPath string, encoderName string, bitrate int) encodeResult {
+func runEncoderMeasured(cfg benchConfig, frames []encode.I420Frame, refPath string, encoderName string, bitrate int) encodeResult {
 	results := runEncoderJobsMeasured(cfg, frames, refPath, []encodeJob{{bitrate: bitrate, encoder: canonicalEncoderName(encoderName)}})
 	if len(results) == 0 {
 		return encodeResult{encoder: canonicalEncoderName(encoderName), targetBPS: bitrate, status: "error", errText: "no encoder result"}
@@ -4501,16 +4503,16 @@ func runEncoderMeasured(cfg benchConfig, frames []goav1.I420Frame, refPath strin
 	return results[0]
 }
 
-func runEncoderJobsMeasured(cfg benchConfig, frames []goav1.I420Frame, refPath string, jobs []encodeJob) []encodeResult {
+func runEncoderJobsMeasured(cfg benchConfig, frames []encode.I420Frame, refPath string, jobs []encodeJob) []encodeResult {
 	return runEncoderJobsMeasuredWithRunner(cfg, frames, refPath, jobs, runEncoder)
 }
 
 func runEncoderJobsMeasuredWithRunner(
 	cfg benchConfig,
-	frames []goav1.I420Frame,
+	frames []encode.I420Frame,
 	refPath string,
 	jobs []encodeJob,
-	runner func(benchConfig, []goav1.I420Frame, string, string, int) encodeResult,
+	runner func(benchConfig, []encode.I420Frame, string, string, int) encodeResult,
 ) []encodeResult {
 	results := make([][]encodeResult, len(jobs))
 	final := make([]encodeResult, len(jobs))
@@ -4729,7 +4731,7 @@ func attachEncodeRunSummary(selected encodeResult, results []encodeResult, warmu
 	return selected
 }
 
-func encodeGoAV1(cfg benchConfig, frames []goav1.I420Frame, bitrate int) encodeResult {
+func encodeGoAV1(cfg benchConfig, frames []encode.I420Frame, bitrate int) encodeResult {
 	result := encodeGoAV1Artifact(cfg, frames, bitrate)
 	if result.status != "ok" {
 		return result
@@ -4748,7 +4750,7 @@ func encodeGoAV1(cfg benchConfig, frames []goav1.I420Frame, bitrate int) encodeR
 	return result
 }
 
-func encodeGoAV1Artifact(cfg benchConfig, frames []goav1.I420Frame, bitrate int) encodeResult {
+func encodeGoAV1Artifact(cfg benchConfig, frames []encode.I420Frame, bitrate int) encodeResult {
 	timedFrames := frames
 	result := encodeResult{
 		encoder:          "goav1",
@@ -4810,7 +4812,7 @@ func encodeGoAV1Artifact(cfg benchConfig, frames []goav1.I420Frame, bitrate int)
 		}
 	}()
 
-	enc, err := goav1.NewVideoEncoder(goav1.VideoEncoderConfig{
+	enc, err := encode.NewVideoEncoder(encode.VideoEncoderConfig{
 		Width:           cfg.width,
 		Height:          cfg.height,
 		TargetBitrate:   bitrate,
@@ -4843,7 +4845,7 @@ func encodeGoAV1Artifact(cfg benchConfig, frames []goav1.I420Frame, bitrate int)
 	encodedHash := sha256.New()
 	for i, frame := range timedFrames {
 		qBefore := enc.QIndex()
-		statsBefore := goav1.EncoderDecisionStats{}
+		statsBefore := encode.EncoderDecisionStats{}
 		if statsEnabled {
 			statsBefore = enc.DecisionStats()
 		}

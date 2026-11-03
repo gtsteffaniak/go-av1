@@ -4,8 +4,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderL1T3LayerDrops proves the three-layer temporal structure:
@@ -85,7 +85,7 @@ func TestVideoEncoderL1T3LayerDrops(t *testing.T) {
 				subRecons = append(subRecons, recons[i])
 			}
 		}
-		dec, err := goav1.NewDecoder(subTUs)
+		dec, err := decode.NewDecoder(subTUs)
 		if err != nil {
 			t.Fatalf("%s: %v", name, err)
 		}

@@ -5,9 +5,9 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	"github.com/gtsteffaniak/go-av1/internal/av1/tile"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderMDS0IntraDC pins the light-PD1 DC_PRED arm: after a cut
@@ -68,7 +68,7 @@ func TestVideoEncoderMDS0IntraDC(t *testing.T) {
 	if big == 0 {
 		t.Fatal("scene cut coded no 16x16/32x32 DC intra blocks")
 	}
-	dec, err := goav1.NewDecoder(serialTUs)
+	dec, err := decode.NewDecoder(serialTUs)
 	if err != nil {
 		t.Fatal(err)
 	}

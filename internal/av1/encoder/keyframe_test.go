@@ -6,8 +6,9 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestEncodeLosslessKeyframeDecodesBitExact is the encoder's end-to-end gate:
@@ -60,7 +61,7 @@ func TestEncodeLosslessKeyframeDecodesBitExact(t *testing.T) {
 			}
 			t.Logf("encoded TU: %d bytes", len(tu))
 
-			dec, err := goav1.NewDecoder([][]byte{tu})
+			dec, err := decode.NewDecoder([][]byte{tu})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}
@@ -111,7 +112,7 @@ func TestEncodeLosslessMonochromeKeyframeDecodesBitExact(t *testing.T) {
 			}
 			t.Logf("encoded monochrome TU: %d bytes", len(tu))
 
-			dec, err := goav1.NewDecoder([][]byte{tu})
+			dec, err := decode.NewDecoder([][]byte{tu})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}
@@ -134,7 +135,7 @@ func TestEncodeLosslessMonochromeKeyframeDecodesBitExact(t *testing.T) {
 	}
 }
 
-func comparePlane(t *testing.T, name string, got goav1.FramePlane, want []byte, w, h, wantStride int) {
+func comparePlane(t *testing.T, name string, got av1.FramePlane, want []byte, w, h, wantStride int) {
 	t.Helper()
 	if got.Width != w || got.Height != h {
 		t.Fatalf("%s plane %dx%d, want %dx%d", name, got.Width, got.Height, w, h)
@@ -149,7 +150,7 @@ func comparePlane(t *testing.T, name string, got goav1.FramePlane, want []byte, 
 	}
 }
 
-func compareAbsentPlane(t *testing.T, name string, got goav1.FramePlane) {
+func compareAbsentPlane(t *testing.T, name string, got av1.FramePlane) {
 	t.Helper()
 	if got.Width != 0 || got.Height != 0 || got.Stride != 0 || len(got.Pix) != 0 {
 		t.Fatalf("%s plane=%+v, want absent", name, got)

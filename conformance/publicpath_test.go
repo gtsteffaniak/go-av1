@@ -14,12 +14,13 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	av1 "github.com/gtsteffaniak/go-av1/pkg/av1"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
+	rtp "github.com/gtsteffaniak/go-av1/pkg/rtp"
 	"os"
 	"path/filepath"
 	"runtime"
 	"testing"
-
-	av1 "github.com/gtsteffaniak/go-av1"
 )
 
 type publicClip struct {
@@ -784,7 +785,7 @@ func TestPublicPathProfileClipsWorkers(t *testing.T) {
 }
 
 type publicProfilePostFilterObserver struct {
-	runner                        av1.DecoderFrameWorkReusableSupportedPostFilterRunner
+	runner                        decode.DecoderFrameWorkReusableSupportedPostFilterRunner
 	sawMultiColumnLoopFilterMasks bool
 }
 
@@ -792,8 +793,8 @@ func newPublicProfilePostFilterObserver() publicProfilePostFilterObserver {
 	return publicProfilePostFilterObserver{}
 }
 
-func (r *publicProfilePostFilterObserver) Apply(ctx av1.DecoderFrameWorkPostFilterContext) error {
-	if ctx.RemainingPostFilters().Has(av1.DecoderFrameWorkPostFilterLoopFilter) &&
+func (r *publicProfilePostFilterObserver) Apply(ctx decode.DecoderFrameWorkPostFilterContext) error {
+	if ctx.RemainingPostFilters().Has(decode.DecoderFrameWorkPostFilterLoopFilter) &&
 		ctx.LoopFilterMasks != nil && ctx.LoopFilterMasks.Valid() && ctx.LoopFilterMasks.SB128W > 1 {
 		r.sawMultiColumnLoopFilterMasks = true
 	}
@@ -811,7 +812,7 @@ func (r *publicProfilePostFilterObserver) PostFilterOutput() (*av1.Frame, bool) 
 func TestPublicPathCallerPostFilterProfileClips(t *testing.T) {
 	for _, clip := range callerPostFilterClips {
 		t.Run(clip.file, func(t *testing.T) {
-			var postFilter av1.DecoderFrameWorkReusableCallerPostFilterRunner
+			var postFilter decode.DecoderFrameWorkReusableCallerPostFilterRunner
 			got := decodeClipPublicDataWithRunner(t, readPublicClip(t, clip.file), &postFilter)
 			if len(got) != len(clip.frameMD5Hex) {
 				t.Fatalf("decoded %d visible frames, want %d", len(got), len(clip.frameMD5Hex))
@@ -907,16 +908,16 @@ func decodeClipPublic(t *testing.T, file string) [][16]byte {
 
 func decodeClipPublicData(t *testing.T, ivfData []byte) [][16]byte {
 	t.Helper()
-	var postFilter av1.DecoderFrameWorkReusableSupportedPostFilterRunner
+	var postFilter decode.DecoderFrameWorkReusableSupportedPostFilterRunner
 	return decodeClipPublicDataWithRunner(t, ivfData, &postFilter)
 }
 
-func decodeClipPublicDataWithRunner(t *testing.T, ivfData []byte, postFilter av1.DecoderFrameWorkPostFilterRunner) [][16]byte {
+func decodeClipPublicDataWithRunner(t *testing.T, ivfData []byte, postFilter decode.DecoderFrameWorkPostFilterRunner) [][16]byte {
 	t.Helper()
 	return decodeClipPublicDataWithRunnerWorkers(t, ivfData, postFilter, 1)
 }
 
-func decodeClipPublicDataWithRunnerWorkers(t *testing.T, ivfData []byte, postFilter av1.DecoderFrameWorkPostFilterRunner, workers int) [][16]byte {
+func decodeClipPublicDataWithRunnerWorkers(t *testing.T, ivfData []byte, postFilter decode.DecoderFrameWorkPostFilterRunner, workers int) [][16]byte {
 	t.Helper()
 	if workers <= 0 {
 		t.Fatalf("workers must be positive, got %d", workers)
@@ -943,18 +944,18 @@ func decodeClipPublicDataWithRunnerWorkers(t *testing.T, ivfData []byte, postFil
 		t.Fatal("clip produced no frames")
 	}
 
-	workerPool, err := av1.NewTileWorkerPool(workers)
+	workerPool, err := decode.NewTileWorkerPool(workers)
 	if err != nil {
 		t.Fatalf("worker pool: %v", err)
 	}
 	defer workerPool.Close()
 
-	var probeStream av1.DecoderStream
-	probeEvents := make([]av1.DecoderEvent, 16*len(payloads)+64)
+	var probeStream decode.DecoderStream
+	probeEvents := make([]decode.DecoderEvent, 16*len(payloads)+64)
 	probeSpans := make([]av1.TileSpan, av1.MaxTiles)
 	probeJobs := make([]av1.TileJob, av1.MaxTiles)
-	probeBatches := make([]av1.TileBatch, av1.MaxTiles)
-	plan, err := av1.DecoderFrameWorkResidualLowOverheadStreamsPlan(
+	probeBatches := make([]decode.TileBatch, av1.MaxTiles)
+	plan, err := decode.DecoderFrameWorkResidualLowOverheadStreamsPlan(
 		probeStream, payloads, workers, probeEvents, probeSpans, probeJobs, probeBatches)
 	if err != nil {
 		t.Fatalf("stream plan: %v", err)
@@ -975,20 +976,20 @@ func decodeClipPublicDataWithRunnerWorkers(t *testing.T, ivfData []byte, postFil
 	pool := bindPublicFramePool(t, format, surfaceCount)
 
 	var (
-		stream   av1.DecoderStream
-		refs     av1.DecoderSurfaceReferences
-		state    av1.DecoderFrameWorkState
-		stats    av1.DecoderFrameWorkTileResidualStats
-		sideData av1.DecoderFrameWorkSideData
-		batch    av1.DecoderFrameWorkBatchResidualRunner
+		stream   decode.DecoderStream
+		refs     decode.DecoderSurfaceReferences
+		state    decode.DecoderFrameWorkState
+		stats    decode.DecoderFrameWorkTileResidualStats
+		sideData decode.DecoderFrameWorkSideData
+		batch    decode.DecoderFrameWorkBatchResidualRunner
 	)
 	refSurface := make([]int, av1.InterRefsPerFrame)
 	refFrames := make([]*av1.Frame, av1.InterRefsPerFrame)
 	releases := make([]int, av1.RefFrames)
 
 	scratch := newPublicStreamScratch(plan.Size)
-	runner, _, err := av1.BindDecoderFrameWorkResidualStreamPlanRunner(plan, &stream,
-		av1.DecoderFrameWorkResidualEventRuntime{
+	runner, _, err := decode.BindDecoderFrameWorkResidualStreamPlanRunner(plan, &stream,
+		decode.DecoderFrameWorkResidualEventRuntime{
 			State:             &state,
 			Refs:              &refs,
 			FramePool:         &pool,
@@ -1006,7 +1007,7 @@ func decodeClipPublicDataWithRunnerWorkers(t *testing.T, ivfData []byte, postFil
 
 	var digests [][16]byte
 	for i, payload := range payloads {
-		var result av1.DecoderFrameWorkResidualStreamResult
+		var result decode.DecoderFrameWorkResidualStreamResult
 		if err := runner.RunLowOverheadIntoWithPostFilterRunner(&result, payload, postFilter); err != nil {
 			t.Fatalf("frame %d run: %v", i, err)
 		}
@@ -1016,7 +1017,7 @@ func decodeClipPublicDataWithRunnerWorkers(t *testing.T, ivfData []byte, postFil
 			}
 			digests = append(digests, frameMD5(t, frame))
 		}
-		av1.DecoderReleaseUnreferencedFrameSurfaces(&refs, &pool)
+		decode.DecoderReleaseUnreferencedFrameSurfaces(&refs, &pool)
 	}
 	return digests
 }
@@ -1044,18 +1045,18 @@ func decodeClipPublicDataWithExternalReferences(t *testing.T, ivfData []byte) []
 	}
 
 	const workers = 1
-	workerPool, err := av1.NewTileWorkerPool(workers)
+	workerPool, err := decode.NewTileWorkerPool(workers)
 	if err != nil {
 		t.Fatalf("worker pool: %v", err)
 	}
 	defer workerPool.Close()
 
-	var probeStream av1.DecoderStream
-	probeEvents := make([]av1.DecoderEvent, 16*len(payloads)+64)
+	var probeStream decode.DecoderStream
+	probeEvents := make([]decode.DecoderEvent, 16*len(payloads)+64)
 	probeSpans := make([]av1.TileSpan, av1.MaxTiles)
 	probeJobs := make([]av1.TileJob, av1.MaxTiles)
-	probeBatches := make([]av1.TileBatch, av1.MaxTiles)
-	plan, err := av1.DecoderFrameWorkResidualLowOverheadStreamsPlan(
+	probeBatches := make([]decode.TileBatch, av1.MaxTiles)
+	plan, err := decode.DecoderFrameWorkResidualLowOverheadStreamsPlan(
 		probeStream, payloads, workers, probeEvents, probeSpans, probeJobs, probeBatches)
 	if err != nil {
 		t.Fatalf("stream plan: %v", err)
@@ -1079,12 +1080,12 @@ func decodeClipPublicDataWithExternalReferences(t *testing.T, ivfData []byte) []
 	provider := publicExternalSurfaceProvider{coded: &codedPool, output: &outputPool}
 
 	var (
-		stream   av1.DecoderStream
-		refs     av1.DecoderSurfaceReferences
-		state    av1.DecoderFrameWorkState
-		stats    av1.DecoderFrameWorkTileResidualStats
-		sideData av1.DecoderFrameWorkSideData
-		batch    av1.DecoderFrameWorkBatchResidualRunner
+		stream   decode.DecoderStream
+		refs     decode.DecoderSurfaceReferences
+		state    decode.DecoderFrameWorkState
+		stats    decode.DecoderFrameWorkTileResidualStats
+		sideData decode.DecoderFrameWorkSideData
+		batch    decode.DecoderFrameWorkBatchResidualRunner
 	)
 	refSurface := make([]int, av1.InterRefsPerFrame)
 	refFrames := make([]*av1.Frame, av1.InterRefsPerFrame)
@@ -1092,8 +1093,8 @@ func decodeClipPublicDataWithExternalReferences(t *testing.T, ivfData []byte) []
 	postFilter := &publicExternalPostFilterRunner{outputPool: &outputPool}
 
 	scratch := newPublicStreamScratch(plan.Size)
-	runner, _, err := av1.BindDecoderFrameWorkResidualStreamPlanRunner(plan, &stream,
-		av1.DecoderFrameWorkResidualEventRuntime{
+	runner, _, err := decode.BindDecoderFrameWorkResidualStreamPlanRunner(plan, &stream,
+		decode.DecoderFrameWorkResidualEventRuntime{
 			State:             &state,
 			Refs:              &refs,
 			FramePool:         &codedPool,
@@ -1104,7 +1105,7 @@ func decodeClipPublicDataWithExternalReferences(t *testing.T, ivfData []byte) []
 			WorkerPool:        workerPool,
 			SideData:          &sideData,
 			Stats:             &stats,
-			External: av1.DecoderFrameWorkExternalReferenceRuntime{
+			External: decode.DecoderFrameWorkExternalReferenceRuntime{
 				Provider:      provider,
 				GlobalSurface: func(local int) int { return local },
 				Releaser:      provider,
@@ -1116,7 +1117,7 @@ func decodeClipPublicDataWithExternalReferences(t *testing.T, ivfData []byte) []
 
 	var digests [][16]byte
 	for i, payload := range payloads {
-		var result av1.DecoderFrameWorkResidualStreamResult
+		var result decode.DecoderFrameWorkResidualStreamResult
 		if err := runner.RunLowOverheadIntoWithPostFilterRunner(&result, payload, postFilter); err != nil {
 			t.Fatalf("frame %d run: %v", i, err)
 		}
@@ -1174,36 +1175,36 @@ func (p publicExternalSurfaceProvider) ReleaseFrameSurfaces(ids []int) error {
 
 func (p publicExternalSurfaceProvider) resolve(id int) (*av1.FramePool, int, error) {
 	if id < 0 {
-		return nil, -1, av1.ErrDecoderInvalidSurfaceReference
+		return nil, -1, decode.ErrDecoderInvalidSurfaceReference
 	}
 	if id >= publicExternalOutputSurfaceBase {
 		if p.output == nil {
-			return nil, -1, av1.ErrDecoderInvalidSurfaceReference
+			return nil, -1, decode.ErrDecoderInvalidSurfaceReference
 		}
 		return p.output, id - publicExternalOutputSurfaceBase, nil
 	}
 	if p.coded == nil {
-		return nil, -1, av1.ErrDecoderInvalidSurfaceReference
+		return nil, -1, decode.ErrDecoderInvalidSurfaceReference
 	}
 	return p.coded, id, nil
 }
 
 type publicExternalPostFilterRunner struct {
-	supported  av1.DecoderFrameWorkReusableSupportedPostFilterRunner
+	supported  decode.DecoderFrameWorkReusableSupportedPostFilterRunner
 	outputPool *av1.FramePool
-	scratch    av1.DecoderFrameWorkPostFilterRequestScratch
-	size       av1.DecoderFrameWorkPostFilterRequestScratchSize
+	scratch    decode.DecoderFrameWorkPostFilterRequestScratch
+	size       decode.DecoderFrameWorkPostFilterRequestScratchSize
 	output     *av1.Frame
 	published  int
 }
 
-func (r *publicExternalPostFilterRunner) Apply(ctx av1.DecoderFrameWorkPostFilterContext) error {
+func (r *publicExternalPostFilterRunner) Apply(ctx decode.DecoderFrameWorkPostFilterContext) error {
 	if r == nil {
-		return av1.ErrDecoderInvalidFrameWorkState
+		return decode.ErrDecoderInvalidFrameWorkState
 	}
 	r.output = nil
 	r.published = -1
-	if !ctx.ActivePostFilters().Has(av1.DecoderFrameWorkPostFilterSuperRes) {
+	if !ctx.ActivePostFilters().Has(decode.DecoderFrameWorkPostFilterSuperRes) {
 		if err := r.supported.Apply(ctx); err != nil {
 			return err
 		}
@@ -1233,20 +1234,20 @@ func (r *publicExternalPostFilterRunner) Apply(ctx av1.DecoderFrameWorkPostFilte
 	if err != nil {
 		return err
 	}
-	side := av1.DecoderFrameWorkPostFilterRequestSideDataFromContext(ctx)
-	first, err := ctx.CallerPostFilterScratchLen(av1.DecoderFrameWorkPostFilterRequest{
-		LoopFilter:  av1.DecoderFrameWorkLoopFilterPostFilterRequest{Map: side.LoopFilterMap},
-		CDEF:        av1.DecoderFrameWorkCDEFPostFilterRequest{IndexMap: side.CDEFIndexMap},
-		Restoration: av1.DecoderFrameWorkRestorationPostFilterRequest{Records: side.RestorationRecords},
+	side := decode.DecoderFrameWorkPostFilterRequestSideDataFromContext(ctx)
+	first, err := ctx.CallerPostFilterScratchLen(decode.DecoderFrameWorkPostFilterRequest{
+		LoopFilter:  decode.DecoderFrameWorkLoopFilterPostFilterRequest{Map: side.LoopFilterMap},
+		CDEF:        decode.DecoderFrameWorkCDEFPostFilterRequest{IndexMap: side.CDEFIndexMap},
+		Restoration: decode.DecoderFrameWorkRestorationPostFilterRequest{Records: side.RestorationRecords},
 	})
 	if err != nil {
 		return err
 	}
-	probe := av1.DecoderFrameWorkPostFilterRequest{
-		LoopFilter:  av1.DecoderFrameWorkLoopFilterPostFilterRequest{Map: side.LoopFilterMap},
-		CDEF:        av1.DecoderFrameWorkCDEFPostFilterRequest{IndexMap: side.CDEFIndexMap},
-		Restoration: av1.DecoderFrameWorkRestorationPostFilterRequest{Records: side.RestorationRecords},
-		SuperRes: av1.DecoderFrameWorkSuperResPostFilterRequest{
+	probe := decode.DecoderFrameWorkPostFilterRequest{
+		LoopFilter:  decode.DecoderFrameWorkLoopFilterPostFilterRequest{Map: side.LoopFilterMap},
+		CDEF:        decode.DecoderFrameWorkCDEFPostFilterRequest{IndexMap: side.CDEFIndexMap},
+		Restoration: decode.DecoderFrameWorkRestorationPostFilterRequest{Records: side.RestorationRecords},
+		SuperRes: decode.DecoderFrameWorkSuperResPostFilterRequest{
 			OutputFrame: backing,
 			OutputView:  out,
 		},
@@ -1255,18 +1256,18 @@ func (r *publicExternalPostFilterRunner) Apply(ctx av1.DecoderFrameWorkPostFilte
 	if err != nil {
 		return err
 	}
-	arena := av1.DecoderFrameWorkPostFilterRequestScratchLen(first).Max(
-		av1.DecoderFrameWorkPostFilterRequestScratchLen(full))
+	arena := decode.DecoderFrameWorkPostFilterRequestScratchLen(first).Max(
+		decode.DecoderFrameWorkPostFilterRequestScratchLen(full))
 	if publicPostFilterScratchTooSmall(r.scratch, arena) {
 		r.size = r.size.Max(arena)
 		r.scratch = publicPostFilterScratch(r.size)
 	}
-	buffers, err := av1.BindDecoderFrameWorkPostFilterRequestBuffersFromScratch(full, side, r.scratch)
+	buffers, err := decode.BindDecoderFrameWorkPostFilterRequestBuffersFromScratch(full, side, r.scratch)
 	if err != nil {
 		return err
 	}
 	buffers.SuperResOutputFrame = backing
-	req, err := av1.BindDecoderFrameWorkPostFilterRequest(full, buffers)
+	req, err := decode.BindDecoderFrameWorkPostFilterRequest(full, buffers)
 	if err != nil {
 		return err
 	}
@@ -1308,7 +1309,7 @@ func publicFrameBacking(f *av1.Frame) ([]byte, error) {
 	return f.Y.Pix[:f.Layout.Size], nil
 }
 
-func publicPostFilterScratchTooSmall(s av1.DecoderFrameWorkPostFilterRequestScratch, size av1.DecoderFrameWorkPostFilterRequestScratchSize) bool {
+func publicPostFilterScratchTooSmall(s decode.DecoderFrameWorkPostFilterRequestScratch, size decode.DecoderFrameWorkPostFilterRequestScratchSize) bool {
 	return len(s.LoopFilterEdges) < size.LoopFilterEdges ||
 		len(s.LoopFilterSchedule) < size.LoopFilterSchedule ||
 		len(s.CDEFDirectionGrid) < size.CDEFDirectionGrid ||
@@ -1319,9 +1320,9 @@ func publicPostFilterScratchTooSmall(s av1.DecoderFrameWorkPostFilterRequestScra
 		len(s.Int32Scratch) < size.Int32Scratch
 }
 
-func publicPostFilterScratch(size av1.DecoderFrameWorkPostFilterRequestScratchSize) av1.DecoderFrameWorkPostFilterRequestScratch {
-	return av1.DecoderFrameWorkPostFilterRequestScratch{
-		LoopFilterEdges:    make([]av1.DecoderFrameWorkLoopFilterPostFilterEdge, size.LoopFilterEdges),
+func publicPostFilterScratch(size decode.DecoderFrameWorkPostFilterRequestScratchSize) decode.DecoderFrameWorkPostFilterRequestScratch {
+	return decode.DecoderFrameWorkPostFilterRequestScratch{
+		LoopFilterEdges:    make([]decode.DecoderFrameWorkLoopFilterPostFilterEdge, size.LoopFilterEdges),
 		LoopFilterSchedule: make([]uint32, size.LoopFilterSchedule),
 		CDEFDirectionGrid:  make([]av1.CDEFDirectionGrid, size.CDEFDirectionGrid),
 		CDEFVarianceGrid:   make([]av1.CDEFVarianceGrid, size.CDEFVarianceGrid),
@@ -1371,48 +1372,48 @@ func bindPublicFramePool(t *testing.T, format av1.FrameFormat, count int) av1.Fr
 	return pool
 }
 
-func newPublicStreamScratch(size av1.DecoderFrameWorkResidualStreamScratchSize) av1.DecoderFrameWorkResidualStreamScratch {
-	return av1.DecoderFrameWorkResidualStreamScratch{
-		Events:    make([]av1.DecoderEvent, size.Events),
+func newPublicStreamScratch(size decode.DecoderFrameWorkResidualStreamScratchSize) decode.DecoderFrameWorkResidualStreamScratch {
+	return decode.DecoderFrameWorkResidualStreamScratch{
+		Events:    make([]decode.DecoderEvent, size.Events),
 		Event:     newPublicEventScratch(size.Event),
 		SideData:  newPublicSideDataScratch(size.Event.SideData),
 		Outputs:   make([]*av1.Frame, size.Event.Outputs),
 		RTPBuffer: make([]byte, size.RTPBuffer),
-		RTPSpans:  make([]av1.RTPObuSpan, size.RTPSpans),
+		RTPSpans:  make([]rtp.RTPObuSpan, size.RTPSpans),
 	}
 }
 
-func newPublicEventScratch(size av1.DecoderFrameWorkResidualEventScratchSize) av1.DecoderFrameWorkResidualEventScratch {
-	return av1.DecoderFrameWorkResidualEventScratch{
+func newPublicEventScratch(size decode.DecoderFrameWorkResidualEventScratchSize) decode.DecoderFrameWorkResidualEventScratch {
+	return decode.DecoderFrameWorkResidualEventScratch{
 		Runner:   newPublicBatchRunnerScratch(size.Runner),
 		SideData: newPublicSideDataScratch(size.SideData),
 		Spans:    make([]av1.TileSpan, size.Plan.SpanCount),
 		Jobs:     make([]av1.TileJob, size.Plan.JobCount),
-		Batches:  make([]av1.TileBatch, size.Plan.BatchCount),
+		Batches:  make([]decode.TileBatch, size.Plan.BatchCount),
 	}
 }
 
-func newPublicBatchRunnerScratch(size av1.DecoderFrameWorkBatchResidualRunnerScratchSize) av1.DecoderFrameWorkBatchResidualRunnerScratch {
-	return av1.DecoderFrameWorkBatchResidualRunnerScratch{
+func newPublicBatchRunnerScratch(size decode.DecoderFrameWorkBatchResidualRunnerScratchSize) decode.DecoderFrameWorkBatchResidualRunnerScratch {
+	return decode.DecoderFrameWorkBatchResidualRunnerScratch{
 		States:                  make([]av1.TileDecodeState, size.Workers),
-		Storages:                make([]av1.DecoderFrameWorkTileResidualCDFStorage, size.Workers),
-		TileScratch:             make([]av1.DecoderFrameWorkTileResidualScratch, size.Workers),
-		RestorationRequests:     make([]av1.DecoderFrameWorkTileRestorationRequest, size.RestorationRequests),
-		PredictionScratch:       make([]av1.DecoderFrameWorkPredictionScratch, size.Workers),
-		InterPredictionScratch:  make([]av1.DecoderFrameWorkInterPredictionScratch, size.Workers),
-		Stats:                   make([]av1.DecoderFrameWorkTileResidualStats, size.Workers),
+		Storages:                make([]decode.DecoderFrameWorkTileResidualCDFStorage, size.Workers),
+		TileScratch:             make([]decode.DecoderFrameWorkTileResidualScratch, size.Workers),
+		RestorationRequests:     make([]decode.DecoderFrameWorkTileRestorationRequest, size.RestorationRequests),
+		PredictionScratch:       make([]decode.DecoderFrameWorkPredictionScratch, size.Workers),
+		InterPredictionScratch:  make([]decode.DecoderFrameWorkInterPredictionScratch, size.Workers),
+		Stats:                   make([]decode.DecoderFrameWorkTileResidualStats, size.Workers),
 		Int32Scratch:            make([]int32, size.Int32Scratch),
 		ResidualScratch:         make([]int16, size.ResidualScratch),
 		LoopContextAboveScratch: make([]av1.TileBlockLoopRootAboveContext, size.LoopContextAbove),
 	}
 }
 
-func newPublicSideDataScratch(size av1.DecoderFrameWorkSideDataScratchSize) av1.DecoderFrameWorkSideDataScratch {
-	return av1.DecoderFrameWorkSideDataScratch{
+func newPublicSideDataScratch(size decode.DecoderFrameWorkSideDataScratchSize) decode.DecoderFrameWorkSideDataScratch {
+	return decode.DecoderFrameWorkSideDataScratch{
 		CDEFIndexMap:             make([]uint8, size.CDEFIndexMap),
 		CDEFReadMap:              make([]bool, size.CDEFReadMap),
-		LoopFilterMap:            make([]av1.DecoderFrameWorkLoopFilterBlockRecord, size.LoopFilterMap),
-		LoopFilterMasks:          make([]av1.DecoderFrameWorkLoopFilterFilterMask, size.LoopFilterMasks),
+		LoopFilterMap:            make([]decode.DecoderFrameWorkLoopFilterBlockRecord, size.LoopFilterMap),
+		LoopFilterMasks:          make([]decode.DecoderFrameWorkLoopFilterFilterMask, size.LoopFilterMasks),
 		LoopFilterLevelCache:     make([][4]uint8, size.LoopFilterLevelCache),
 		RestorationRecords:       make([]av1.TileRestorationUnitRecord, size.RestorationRecords),
 		RestorationBoundaryAbove: make([]uint16, size.RestorationBoundaryAbove),

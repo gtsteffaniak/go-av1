@@ -6,8 +6,8 @@ import (
 	"math/rand"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestEncodePFrameDecodeMatchesRecon is the temporal-compression gate: a KEY +
@@ -91,7 +91,7 @@ func TestEncodePFrameDecodeMatchesRecon(t *testing.T) {
 				t.Fatalf("P TU %d bytes not smaller than key TU %d bytes", len(pTU), len(keyTU))
 			}
 
-			dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+			dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}
@@ -159,7 +159,7 @@ func TestEncodeLosslessPFrameDecodeMatchesSource(t *testing.T) {
 		t.Fatal("lossless P-frame reconstruction differs from source")
 	}
 
-	dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+	dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 	if err != nil {
 		t.Fatalf("new decoder: %v", err)
 	}
@@ -212,7 +212,7 @@ func TestEncodeLosslessMonochromePFrameDecodeMatchesSource(t *testing.T) {
 		t.Fatal("lossless monochrome P-frame reconstruction differs from source")
 	}
 
-	dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+	dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 	if err != nil {
 		t.Fatalf("new decoder: %v", err)
 	}
@@ -282,7 +282,7 @@ func TestEncodeMonochromePFrameDecodeMatchesRecon(t *testing.T) {
 	}
 	t.Logf("mono key TU %d bytes, mono P TU %d bytes", len(keyTU), len(pTU))
 
-	dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+	dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 	if err != nil {
 		t.Fatalf("new decoder: %v", err)
 	}
@@ -394,7 +394,7 @@ func TestEncodeHighBitDepthMonochromePFrameDecodeMatchesRecon(t *testing.T) {
 				t.Fatal("lossless high-bit-depth monochrome P-frame reconstruction differs from source")
 			}
 
-			dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+			dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}
@@ -504,7 +504,7 @@ func TestEncodeHighBitDepth420PFrameDecodeMatchesRecon(t *testing.T) {
 				t.Fatal("lossless high-bit-depth 4:2:0 P-frame reconstruction differs from source")
 			}
 
-			dec, err := goav1.NewDecoder([][]byte{keyTU, pTU})
+			dec, err := decode.NewDecoder([][]byte{keyTU, pTU})
 			if err != nil {
 				t.Fatalf("new decoder: %v", err)
 			}

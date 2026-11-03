@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
 	"github.com/gtsteffaniak/go-av1/internal/av1/ivf"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderRealResolutions exercises the stream encoder at production
@@ -72,7 +72,7 @@ func TestVideoEncoderRealResolutions(t *testing.T) {
 				recons = append(recons, cloneFrame(enc.Recon()))
 			}
 
-			dec, err := goav1.NewDecoder(tus)
+			dec, err := decode.NewDecoder(tus)
 			if err != nil {
 				t.Fatal(err)
 			}

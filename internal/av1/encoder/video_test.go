@@ -7,8 +7,8 @@ import (
 	"os/exec"
 	"testing"
 
-	goav1 "github.com/gtsteffaniak/go-av1"
 	"github.com/gtsteffaniak/go-av1/internal/av1/encoder"
+	decode "github.com/gtsteffaniak/go-av1/pkg/decode"
 )
 
 // TestVideoEncoderChainDecodesBitExact is the streaming gate: a KEY + 5-P
@@ -85,7 +85,7 @@ func TestVideoEncoderChainDecodesBitExact(t *testing.T) {
 		t.Fatalf("avg P %d bytes not well below key %d bytes", avgInter, keySize)
 	}
 
-	dec, err := goav1.NewDecoder(tus)
+	dec, err := decode.NewDecoder(tus)
 	if err != nil {
 		t.Fatal(err)
 	}
